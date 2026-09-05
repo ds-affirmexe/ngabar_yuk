@@ -1,8 +1,10 @@
 <?php
+
 require_once 'config.php';
 
 $search   = isset($_GET['search']) ? trim($_GET['search']) : '';
 $kategori = isset($_GET['kategori']) ? trim($_GET['kategori']) : '';
+$read_time = isset($_GET['read_time']) ? trim($_GET['read_time']) : '';
 
 $query = "SELECT * FROM berita WHERE 1=1";
 $params = [];
@@ -23,6 +25,22 @@ if (!empty($kategori)) {
     $types .= "s";
 }
 
+if (!empty($read_time)) {
+    if ($read_time === '1-3') {
+        $query .= " AND read_time BETWEEN 1 AND 3";
+    } elseif ($read_time === '4-6') {
+        $query .= " AND read_time BETWEEN 4 AND 6";
+    } elseif ($read_time === '7-9') {
+        $query .= " AND read_time BETWEEN 7 AND 9";
+    } elseif ($read_time === '10-12') {
+        $query .= " AND read_time BETWEEN 10 AND 12";
+    } elseif ($read_time === '13-15') {
+        $query .= " AND read_time BETWEEN 13 AND 15";
+    } elseif ($read_time === '15-plus') {
+        $query .= " AND read_time > 15";
+    }
+}
+
 $query .= " ORDER BY id DESC";
 
 $stmt = mysqli_prepare($conn, $query);
@@ -33,6 +51,7 @@ if (!empty($params)) {
 
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
+
 ?>
 
 <!DOCTYPE html>
@@ -257,6 +276,42 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </div>
 
+                    <div class="w-full md:w-48">
+
+                        <select
+                            name="read_time"
+                            class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-600 transition">
+
+                            <option value="">Semua Durasi</option>
+
+                            <option value="1-3" <?= ($read_time === '1-3') ? 'selected' : ''; ?>>
+                                1–3 menit
+                            </option>
+
+                            <option value="4-6" <?= ($read_time === '4-6') ? 'selected' : ''; ?>>
+                                4–6 menit
+                            </option>
+
+                            <option value="7-9" <?= ($read_time === '7-9') ? 'selected' : ''; ?>>
+                                7–9 menit
+                            </option>
+
+                            <option value="10-12" <?= ($read_time === '10-12') ? 'selected' : ''; ?>>
+                                10–12 menit
+                            </option>
+
+                            <option value="13-15" <?= ($read_time === '13-15') ? 'selected' : ''; ?>>
+                                13–15 menit
+                            </option>
+
+                            <option value="15-plus" <?= ($read_time === '15-plus') ? 'selected' : ''; ?>>
+                                Lebih dari 15 menit
+                            </option>
+
+                        </select>
+
+                    </div>
+
                     <div class="flex gap-2">
 
                         <button
@@ -269,7 +324,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                         </button>
 
-                        <?php if (!empty($search) || !empty($kategori)): ?>
+                        <?php if (!empty($search) || !empty($kategori) || !empty($read_time)): ?>
 
                             <a href="index.php"
                                 class="inline-flex items-center justify-center w-11 bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-600 rounded-xl transition"
@@ -505,7 +560,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </div>
 
-                    <?php if (!empty($search) || !empty($kategori)): ?>
+                    <?php if (!empty($search) || !empty($kategori) || !empty($read_time)): ?>
 
                         <p class="text-xs font-bold uppercase tracking-[0.16em] text-amber-800 mb-2">
 
@@ -521,7 +576,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                         <p class="text-sm text-stone-500 mt-2 max-w-md mx-auto leading-relaxed">
 
-                            Coba gunakan kata kunci lain atau pilih kategori yang berbeda untuk menemukan kabar yang sesuai.
+                            Coba gunakan kata kunci lain, pilih kategori yang berbeda, atau gunakan rentang waktu baca yang berbeda.
 
                         </p>
 
