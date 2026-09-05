@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 04, 2026 at 07:25 AM
+-- Generation Time: Sep 05, 2026 at 12:43 AM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.28
 
@@ -35,9 +35,18 @@ CREATE TABLE IF NOT EXISTS `berita` (
   `penulis` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `konten` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `gambar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `read_time` int NOT NULL DEFAULT '1',
   `tanggal` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `berita`
+--
+
+INSERT INTO `berita` (`id`, `judul`, `kategori`, `penulis`, `konten`, `gambar`, `read_time`, `tanggal`) VALUES
+(1, 'The Jeblogs Menggelara Konser di PENS', 'Budaya', 'Fansnya The Jeblogs', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus voluptates odio ullam quas, corrupti, alias rerum itaque repellendus provident quaerat deserunt, ipsa perferendis eaque iusto!', '6a9a7310df7c4.jpeg', 1, '2026-09-04 07:28:16'),
+(2, 'Morfem Hadiri Acara PKKMB PENS 2026 Sebagai Bintang Tamu', 'Insight', 'Penggemar Morfem', 'Anu... pokoknya bisa diubah kok semuanya...', '6a9a7335c6457.jpg', 1, '2026-09-04 07:28:53');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
