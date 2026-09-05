@@ -144,7 +144,6 @@ $result = mysqli_stmt_get_result($stmt);
 
     </header>
 
-
     <main class="flex-1">
 
         <section class="relative overflow-hidden bg-[#542f1b] text-white">
@@ -205,7 +204,6 @@ $result = mysqli_stmt_get_result($stmt);
             </div>
 
         </section>
-
 
         <section class="max-w-5xl mx-auto px-5 -mt-7 relative z-10">
 
@@ -291,7 +289,6 @@ $result = mysqli_stmt_get_result($stmt);
 
         </section>
 
-
         <section id="kabar" class="max-w-5xl mx-auto px-5 py-12 md:py-14">
 
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
@@ -334,7 +331,6 @@ $result = mysqli_stmt_get_result($stmt);
 
             </div>
 
-
             <?php if (mysqli_num_rows($result) > 0): ?>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -376,7 +372,6 @@ $result = mysqli_stmt_get_result($stmt);
 
                             <?php endif; ?>
 
-
                             <div class="p-5 flex-1 flex flex-col">
 
                                 <div class="flex items-center justify-between gap-3 mb-3">
@@ -387,16 +382,27 @@ $result = mysqli_stmt_get_result($stmt);
 
                                     </span>
 
-                                    <span class="text-[11px] text-stone-400 flex items-center gap-1.5 whitespace-nowrap">
+                                    <div class="flex items-center gap-3 text-[11px] text-stone-400 whitespace-nowrap">
 
-                                        <i class="fa-regular fa-calendar"></i>
+                                        <span class="flex items-center gap-1.5">
 
-                                        <?= date('d M Y', strtotime($row['tanggal'])); ?>
+                                            <i class="fa-regular fa-calendar"></i>
 
-                                    </span>
+                                            <?= date('d M Y', strtotime($row['tanggal'])); ?>
+
+                                        </span>
+
+                                        <span class="flex items-center gap-1.5">
+
+                                            <i class="fa-regular fa-clock"></i>
+
+                                            <?= (int)$row['read_time']; ?> menit baca
+
+                                        </span>
+
+                                    </div>
 
                                 </div>
-
 
                                 <h3 class="text-xl font-black text-stone-900 leading-snug group-hover:text-[#542f1b] transition">
 
@@ -408,13 +414,11 @@ $result = mysqli_stmt_get_result($stmt);
 
                                 </h3>
 
-
                                 <p class="text-sm text-stone-500 leading-relaxed mt-3 line-clamp-3">
 
                                     <?= htmlspecialchars($row['konten']); ?>
 
                                 </p>
-
 
                                 <div class="mt-auto pt-5">
 
@@ -431,7 +435,9 @@ $result = mysqli_stmt_get_result($stmt);
                                             <div class="min-w-0">
 
                                                 <p class="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">
+
                                                     Ditulis oleh
+
                                                 </p>
 
                                                 <p class="text-xs text-stone-700 font-bold truncate">
@@ -443,7 +449,6 @@ $result = mysqli_stmt_get_result($stmt);
                                             </div>
 
                                         </div>
-
 
                                         <div class="flex items-center gap-1.5 flex-shrink-0">
 
@@ -503,15 +508,21 @@ $result = mysqli_stmt_get_result($stmt);
                     <?php if (!empty($search) || !empty($kategori)): ?>
 
                         <p class="text-xs font-bold uppercase tracking-[0.16em] text-amber-800 mb-2">
+
                             Tidak Ada Hasil
+
                         </p>
 
                         <h3 class="text-xl font-black text-stone-900">
+
                             Kabar yang dicari belum ditemukan
+
                         </h3>
 
                         <p class="text-sm text-stone-500 mt-2 max-w-md mx-auto leading-relaxed">
+
                             Coba gunakan kata kunci lain atau pilih kategori yang berbeda untuk menemukan kabar yang sesuai.
+
                         </p>
 
                         <a
@@ -527,15 +538,21 @@ $result = mysqli_stmt_get_result($stmt);
                     <?php else: ?>
 
                         <p class="text-xs font-bold uppercase tracking-[0.16em] text-amber-800 mb-2">
+
                             Belum Ada Warta
+
                         </p>
 
                         <h3 class="text-xl font-black text-stone-900">
+
                             Belum ada kabar yang dibagikan
+
                         </h3>
 
                         <p class="text-sm text-stone-500 mt-2 max-w-md mx-auto leading-relaxed">
+
                             Ruang ini masih kosong. Mulai reriungan dengan membagikan kabar, gagasan, atau cerita pertamamu.
+
                         </p>
 
                         <a
@@ -556,7 +573,6 @@ $result = mysqli_stmt_get_result($stmt);
 
         </section>
 
-
         <section class="max-w-5xl mx-auto px-5 pb-14">
 
             <div class="bg-amber-50 border border-amber-200/70 rounded-2xl px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -572,11 +588,15 @@ $result = mysqli_stmt_get_result($stmt);
                     <div>
 
                         <p class="text-sm font-bold text-amber-950">
+
                             Punya cerita untuk dibagikan?
+
                         </p>
 
                         <p class="text-xs text-amber-900/70 mt-0.5">
+
                             Tidak harus besar. Yang penting layak untuk dibicarakan.
+
                         </p>
 
                     </div>
@@ -599,92 +619,9 @@ $result = mysqli_stmt_get_result($stmt);
 
     </main>
 
-
-    <footer class="bg-[#3a2113] text-stone-300 mt-12">
-
-        <div class="max-w-5xl mx-auto px-5">
-
-            <div class="py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
-                <div>
-
-                    <a href="index.php"
-                        class="inline-flex items-center gap-2.5 text-white group">
-
-                        <span class="w-8 h-8 rounded-lg bg-amber-400 text-[#542f1b] flex items-center justify-center group-hover:-rotate-3 transition-transform">
-
-                            <i class="fa-solid fa-mug-hot text-sm"></i>
-
-                        </span>
-
-                        <span class="font-black text-lg tracking-tight">
-
-                            Ngabar
-                            <span class="text-amber-400">Yuk!</span>
-
-                        </span>
-
-                    </a>
-
-                    <p class="text-xs text-stone-400 mt-2 max-w-sm leading-relaxed">
-
-                        Wadah sederhana untuk berbagi kabar,
-                        gagasan, dan cerita yang layak dibicarakan.
-
-                    </p>
-
-                </div>
-
-                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
-
-                    <a href="index.php"
-                        class="text-amber-300">
-
-                        Beranda
-
-                    </a>
-
-                    <a href="about.php"
-                        class="hover:text-amber-300 transition">
-
-                        Tentang
-
-                    </a>
-
-                    <a href="create.php"
-                        class="hover:text-amber-300 transition">
-
-                        Tulis Kabar
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="border-t border-white/10 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
-
-                <p class="text-[11px] text-stone-500">
-
-                    © 2026 Ngabar Yuk! • Dibuat oleh
-                    <span class="text-stone-300 font-semibold">
-                        Aqeela Fazle Mawla Ramadhan
-                    </span>
-
-                </p>
-
-                <p class="text-[11px] text-amber-500 font-medium">
-
-                    Tugas Seleksi Divisi Webmaster
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </footer>
-
+    <?php
+    include 'assets/footer.php'
+    ?>
 
     <?php if (isset($_GET['status'])): ?>
 

@@ -52,6 +52,7 @@ if (isset($_POST['submit'])) {
                     if (!empty($berita['gambar']) && file_exists('assets/img/' . $berita['gambar'])) {
                         unlink('assets/img/' . $berita['gambar']);
                     }
+
                     $gambar = $namaFileBaru;
                 } else {
                     $error = "Gagal mengunggah gambar baru.";
@@ -60,8 +61,26 @@ if (isset($_POST['submit'])) {
         }
 
         if (empty($error)) {
-            $stmt = mysqli_prepare($conn, "UPDATE berita SET judul = ?, kategori = ?, penulis = ?, konten = ?, gambar = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssssi", $judul, $kategori, $penulis, $konten, $gambar, $id);
+            preg_match_all('/\S+/', $konten, $matches);
+            $jumlahKata = count($matches[0]);
+            $read_time = max(1, ceil($jumlahKata / 200));
+
+            $stmt = mysqli_prepare(
+                $conn,
+                "UPDATE berita SET judul = ?, kategori = ?, penulis = ?, konten = ?, gambar = ?, read_time = ? WHERE id = ?"
+            );
+
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ssssssi",
+                $judul,
+                $kategori,
+                $penulis,
+                $konten,
+                $gambar,
+                $read_time,
+                $id
+            );
 
             if (mysqli_stmt_execute($stmt)) {
                 header("Location: index.php?status=update");
@@ -69,6 +88,7 @@ if (isset($_POST['submit'])) {
             } else {
                 $error = "Gagal memperbarui kabar ke database: " . mysqli_error($conn);
             }
+
             mysqli_stmt_close($stmt);
         }
     }
@@ -272,11 +292,15 @@ if (isset($_POST['submit'])) {
                             <div>
 
                                 <p class="text-sm font-black text-stone-800">
+
                                     Perbarui Kabar
+
                                 </p>
 
                                 <p class="text-[11px] text-stone-400">
+
                                     Perubahan akan disimpan pada kabar ini
+
                                 </p>
 
                             </div>
@@ -311,11 +335,15 @@ if (isset($_POST['submit'])) {
                                     <div>
 
                                         <p class="text-[10px] uppercase tracking-[0.14em] font-bold text-rose-600">
+
                                             Perlu diperiksa
+
                                         </p>
 
                                         <span id="alert-text" class="text-sm">
+
                                             <?= htmlspecialchars($error); ?>
+
                                         </span>
 
                                     </div>
@@ -364,12 +392,16 @@ if (isset($_POST['submit'])) {
                                 <div class="flex items-center justify-between mt-1.5">
 
                                     <span class="text-[11px] text-stone-400">
+
                                         Pastikan judul tetap relevan dengan isi.
+
                                     </span>
 
                                     <span id="judul-counter"
                                         class="text-[11px] text-stone-400 shrink-0">
+
                                         Sisa karakter: 255
+
                                     </span>
 
                                 </div>
@@ -456,7 +488,9 @@ if (isset($_POST['submit'])) {
                                     </label>
 
                                     <span class="text-[10px] text-stone-400">
+
                                         Opsional
+
                                     </span>
 
                                 </div>
@@ -484,11 +518,15 @@ if (isset($_POST['submit'])) {
                                             <div>
 
                                                 <p class="text-xs font-bold text-stone-700">
+
                                                     Foto yang sedang digunakan
+
                                                 </p>
 
                                                 <p class="text-[11px] text-stone-400 mt-1 leading-relaxed">
+
                                                     Biarkan kosong jika foto ini tetap ingin digunakan.
+
                                                 </p>
 
                                             </div>
@@ -513,12 +551,16 @@ if (isset($_POST['submit'])) {
                                         <div class="min-w-0">
 
                                             <p class="text-sm font-bold text-stone-700">
+
                                                 Ganti dengan foto baru
+
                                             </p>
 
                                             <p class="text-xs text-stone-400 mt-1 leading-relaxed">
+
                                                 Pilih foto jika ingin mengganti foto utama.
                                                 JPG, JPEG, PNG, atau WEBP. Maks. 2MB.
+
                                             </p>
 
                                         </div>
@@ -566,11 +608,15 @@ if (isset($_POST['submit'])) {
                                             <div>
 
                                                 <p class="text-xs font-bold text-amber-900">
+
                                                     Foto pengganti
+
                                                 </p>
 
                                                 <p class="text-[11px] text-amber-800/70 mt-1 leading-relaxed">
+
                                                     Foto ini akan menggantikan foto utama yang sekarang.
+
                                                 </p>
 
                                             </div>
@@ -585,26 +631,51 @@ if (isset($_POST['submit'])) {
 
                             <div>
 
-                                <label class="block text-sm font-bold text-stone-700 mb-2">
+                                <div class="flex items-center justify-between gap-3 mb-2">
 
-                                    <i class="fa-solid fa-align-left mr-1.5 text-amber-800"></i>
+                                    <label class="block text-sm font-bold text-stone-700">
 
-                                    Isi Berita / Insight
+                                        <i class="fa-solid fa-align-left mr-1.5 text-amber-800"></i>
 
-                                    <span class="text-rose-500">*</span>
+                                        Isi Berita / Insight
 
-                                </label>
+                                        <span class="text-rose-500">*</span>
+
+                                    </label>
+
+                                    <span id="read-time-preview"
+                                        class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-stone-400 bg-stone-50 border border-stone-200 px-2.5 py-1 rounded-lg">
+
+                                        <i class="fa-regular fa-clock"></i>
+
+                                        1 menit baca
+
+                                    </span>
+
+                                </div>
 
                                 <textarea name="konten"
+                                    id="input-konten"
                                     rows="10"
                                     required
                                     class="form-field w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-800 placeholder:text-stone-400 leading-relaxed resize-y focus:outline-none focus:border-amber-600 focus:ring-4 focus:ring-amber-600/10"><?= isset($_POST['konten']) ? htmlspecialchars($_POST['konten']) : htmlspecialchars($berita['konten']); ?></textarea>
 
-                                <p class="text-[11px] text-stone-400 mt-1.5">
+                                <div class="flex items-center justify-between gap-3 mt-1.5">
 
-                                    Periksa kembali isi sebelum menyimpan perubahan.
+                                    <p class="text-[11px] text-stone-400">
 
-                                </p>
+                                        Periksa kembali isi sebelum menyimpan perubahan.
+
+                                    </p>
+
+                                    <p id="word-counter"
+                                        class="text-[11px] text-stone-400 shrink-0">
+
+                                        0 kata
+
+                                    </p>
+
+                                </div>
 
                             </div>
 
@@ -664,16 +735,22 @@ if (isset($_POST['submit'])) {
                     </div>
 
                     <p class="text-[10px] uppercase tracking-[0.16em] font-bold text-amber-300">
+
                         Mode Sunting
+
                     </p>
 
                     <h2 class="text-lg font-black mt-1">
+
                         Periksa sebelum disimpan.
+
                     </h2>
 
                     <p class="text-xs text-stone-300 leading-relaxed mt-3">
+
                         Pastikan perubahan judul, kategori, penulis, isi,
                         maupun foto sudah sesuai sebelum kabar diperbarui.
+
                     </p>
 
                 </div>
@@ -699,7 +776,9 @@ if (isset($_POST['submit'])) {
                             </span>
 
                             <p class="text-xs text-stone-500 leading-relaxed">
+
                                 Judul tetap sesuai dengan isi kabar.
+
                             </p>
 
                         </div>
@@ -713,7 +792,9 @@ if (isset($_POST['submit'])) {
                             </span>
 
                             <p class="text-xs text-stone-500 leading-relaxed">
+
                                 Kategori sudah tepat.
+
                             </p>
 
                         </div>
@@ -727,7 +808,9 @@ if (isset($_POST['submit'])) {
                             </span>
 
                             <p class="text-xs text-stone-500 leading-relaxed">
+
                                 Isi sudah diperiksa kembali.
+
                             </p>
 
                         </div>
@@ -741,7 +824,9 @@ if (isset($_POST['submit'])) {
                             </span>
 
                             <p class="text-xs text-stone-500 leading-relaxed">
+
                                 Foto baru maksimal 2MB jika diganti.
+
                             </p>
 
                         </div>
@@ -763,17 +848,29 @@ if (isset($_POST['submit'])) {
                         <div>
 
                             <p class="text-xs font-bold text-amber-900">
-                                Catatan
+
+                                Estimasi Waktu Baca
+
                             </p>
 
                             <p class="text-[11px] text-amber-800/70 leading-relaxed mt-1">
-                                Tidak perlu memilih foto baru jika ingin
-                                mempertahankan foto yang sedang digunakan.
+
+                                Estimasi diperbarui otomatis berdasarkan jumlah kata
+                                dalam isi kabar.
+
                             </p>
 
                         </div>
 
                     </div>
+
+                </div>
+
+                <div class="px-1 text-[11px] text-stone-400 leading-relaxed">
+
+                    <i class="fa-solid fa-quote-left text-amber-700 mr-1"></i>
+
+                    Perubahan kecil tetap perlu diperiksa sebelum dibagikan kembali.
 
                 </div>
 
@@ -783,90 +880,9 @@ if (isset($_POST['submit'])) {
 
     </main>
 
-    <footer class="bg-[#3a2113] text-stone-300 mt-12">
-
-        <div class="max-w-5xl mx-auto px-5">
-
-            <div class="py-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
-                <div>
-
-                    <a href="index.php"
-                        class="inline-flex items-center gap-2.5 text-white group">
-
-                        <span class="w-8 h-8 rounded-lg bg-amber-400 text-[#542f1b] flex items-center justify-center group-hover:-rotate-3 transition-transform">
-
-                            <i class="fa-solid fa-mug-hot text-sm"></i>
-
-                        </span>
-
-                        <span class="font-black text-lg tracking-tight">
-
-                            Ngabar
-                            <span class="text-amber-400">Yuk!</span>
-
-                        </span>
-
-                    </a>
-
-                    <p class="text-xs text-stone-400 mt-2 max-w-sm leading-relaxed">
-
-                        Wadah sederhana untuk berbagi kabar,
-                        gagasan, dan cerita yang layak dibicarakan.
-
-                    </p>
-
-                </div>
-
-                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
-
-                    <a href="index.php"
-                        class="hover:text-amber-300 transition">
-
-                        Beranda
-
-                    </a>
-
-                    <a href="about.php"
-                        class="hover:text-amber-300 transition">
-
-                        Tentang
-
-                    </a>
-
-                    <a href="create.php"
-                        class="hover:text-amber-300 transition">
-
-                        Tulis Kabar
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="border-t border-white/10 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
-
-                <p class="text-[11px] text-stone-500">
-
-                    © 2026 Ngabar Yuk! • Dibuat oleh
-                    <span class="text-stone-300 font-semibold">
-                        Aqeela Fazle Mawla Ramadhan
-                    </span>
-
-                </p>
-
-                <p class="text-[11px] text-amber-500 font-medium">
-
-                    Tugas Seleksi Divisi Webmaster
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </footer>
+    <?php
+    include 'assets/footer.php'
+    ?>
 
     <script>
         const alertBox = document.getElementById('alert-box');
@@ -929,7 +945,7 @@ if (isset($_POST['submit'])) {
                     reader.onload = function(e) {
                         imagePreview.src = e.target.result;
                         previewContainer.classList.remove('hidden');
-                    }
+                    };
 
                     reader.readAsDataURL(file);
                 } else {
@@ -947,13 +963,46 @@ if (isset($_POST['submit'])) {
         }
 
         const formBerita = document.getElementById('form-berita');
+        const inputKonten = document.getElementById('input-konten');
+        const wordCounter = document.getElementById('word-counter');
+        const readTimePreview = document.getElementById('read-time-preview');
+
+        const updateReadTime = () => {
+            if (!inputKonten || !wordCounter || !readTimePreview) {
+                return;
+            }
+
+            const content = inputKonten.value.trim();
+
+            if (!content) {
+                wordCounter.textContent = '0 kata';
+                readTimePreview.innerHTML = '<i class="fa-regular fa-clock"></i> 1 menit baca';
+                return;
+            }
+
+            const words = content.split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
+            const readTime = Math.max(1, Math.ceil(wordCount / 200));
+
+            wordCounter.textContent = wordCount + ' kata';
+
+            readTimePreview.innerHTML =
+                '<i class="fa-regular fa-clock"></i> ' +
+                readTime +
+                ' menit baca';
+        };
+
+        if (inputKonten) {
+            inputKonten.addEventListener('input', updateReadTime);
+            updateReadTime();
+        }
 
         if (formBerita) {
             formBerita.addEventListener('submit', function(e) {
                 const judul = inputJudul.value.trim();
                 const kategori = formBerita.querySelector('[name="kategori"]').value.trim();
                 const penulis = formBerita.querySelector('[name="penulis"]').value.trim();
-                const konten = formBerita.querySelector('[name="konten"]').value.trim();
+                const konten = inputKonten.value.trim();
 
                 if (!judul || !kategori || !penulis || !konten) {
                     alert('Waduh, semua kolom wajib diisi ya, Lur!');
