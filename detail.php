@@ -50,6 +50,7 @@ mysqli_stmt_close($stmtTerkait);
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title><?= htmlspecialchars($berita['judul']); ?> - Ngabar Yuk!</title>
@@ -77,6 +78,181 @@ mysqli_stmt_close($stmtTerkait);
                 linear-gradient(315deg, rgba(255, 255, 255, .035) 25%, #542f1b 25%);
             background-position: 12px 0, 12px 0, 0 0, 0 0;
             background-size: 24px 24px;
+        }
+
+        .article-content {
+            color: #44403c;
+            font-size: 17px;
+            line-height: 1.95;
+            overflow-wrap: anywhere;
+        }
+
+        .article-content p {
+            margin: 0 0 1.15rem;
+        }
+
+        .article-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .article-content h2 {
+            color: #292524;
+            font-size: 1.65rem;
+            line-height: 1.35;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            margin: 2rem 0 0.85rem;
+        }
+
+        .article-content h3 {
+            color: #292524;
+            font-size: 1.35rem;
+            line-height: 1.4;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin: 1.75rem 0 0.75rem;
+        }
+
+        .article-content h4 {
+            color: #292524;
+            font-size: 1.15rem;
+            line-height: 1.45;
+            font-weight: 800;
+            margin: 1.5rem 0 0.65rem;
+        }
+
+        .article-content strong {
+            color: #292524;
+            font-weight: 800;
+        }
+
+        .article-content em {
+            font-style: italic;
+        }
+
+        .article-content u {
+            text-decoration-line: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .article-content ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin: 0.9rem 0 1.25rem;
+        }
+
+        .article-content ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin: 0.9rem 0 1.25rem;
+        }
+
+        .article-content li {
+            padding-left: 0.25rem;
+            margin: 0.35rem 0;
+        }
+
+        .article-content li>ul,
+        .article-content li>ol {
+            margin-top: 0.35rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .article-content blockquote {
+            position: relative;
+            border-left: 4px solid #d97706;
+            background: #fffbeb;
+            color: #57534e;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 0.75rem 0.75rem 0;
+            font-style: italic;
+        }
+
+        .article-content blockquote p {
+            margin-bottom: 0;
+        }
+
+        .article-content a {
+            color: #92400e;
+            font-weight: 700;
+            text-decoration-line: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+            transition: color 0.2s ease;
+        }
+
+        .article-content a:hover {
+            color: #542f1b;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            margin: 1.25rem auto;
+        }
+
+        .article-content hr {
+            border: 0;
+            border-top: 1px solid #e7e5e4;
+            margin: 2rem 0;
+        }
+
+        .article-content [style*="text-align: center"] {
+            text-align: center;
+        }
+
+        .article-content [style*="text-align:center"] {
+            text-align: center;
+        }
+
+        .article-content [style*="text-align: right"] {
+            text-align: right;
+        }
+
+        .article-content [style*="text-align:right"] {
+            text-align: right;
+        }
+
+        .article-content [style*="text-align: justify"] {
+            text-align: justify;
+        }
+
+        .article-content [style*="text-align:justify"] {
+            text-align: justify;
+        }
+
+        .article-content [align="center"] {
+            text-align: center;
+        }
+
+        .article-content [align="right"] {
+            text-align: right;
+        }
+
+        .article-content [align="justify"] {
+            text-align: justify;
+        }
+
+        @media (max-width: 640px) {
+            .article-content {
+                font-size: 16px;
+                line-height: 1.85;
+            }
+
+            .article-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .article-content h3 {
+                font-size: 1.2rem;
+            }
+
+            .article-content h4 {
+                font-size: 1.05rem;
+            }
         }
     </style>
 
@@ -182,7 +358,8 @@ mysqli_stmt_close($stmtTerkait);
 
             <div class="mb-6">
 
-                <a href="index.php"
+                <a
+                    href="index.php"
                     class="inline-flex items-center gap-2 text-sm font-semibold text-stone-500 hover:text-amber-900 transition">
 
                     <i class="fa-solid fa-arrow-left text-xs"></i>
@@ -314,9 +491,9 @@ mysqli_stmt_close($stmtTerkait);
 
                         <div
                             id="articleContent"
-                            class="mt-8 text-[16px] sm:text-[17px] leading-8 text-stone-700">
+                            class="article-content mt-8">
 
-                            <?= nl2br(htmlspecialchars($berita['konten'])); ?>
+                            <?= $berita['konten']; ?>
 
                         </div>
 
@@ -447,14 +624,11 @@ mysqli_stmt_close($stmtTerkait);
                                             •
                                         </span>
 
-                                        <a
-                                            href="author.php?nama=<?= urlencode($terkait['penulis']); ?>"
-                                            onclick="event.stopPropagation();"
-                                            class="hover:text-amber-800 transition">
+                                        <span class="text-stone-400">
 
                                             <?= htmlspecialchars($terkait['penulis']); ?>
 
-                                        </a>
+                                        </span>
 
                                     </div>
 

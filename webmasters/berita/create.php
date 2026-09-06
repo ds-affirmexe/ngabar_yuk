@@ -24,74 +24,139 @@ if ($usersQuery) {
     }
 }
 
+function sanitizeEditorContent($html)
+{
+    $allowedTags = '<p><br><strong><b><em><i><u><h2><h3><h4><ul><ol><li><blockquote><a><div>';
+
+    $html = strip_tags($html, $allowedTags);
+
+    $html = preg_replace('/\s*on[a-z]+\s*=\s*(".*?"|\'.*?\'|[^\s>]+)/is', '', $html);
+
+    $html = preg_replace(
+        '/\sstyle\s*=\s*("|\')(.*?)\1/is',
+        '',
+        $html
+    );
+
+    $html = preg_replace_callback(
+        '/<a\b([^>]*)>/i',
+        function ($matches) {
+            $attributes = $matches[1];
+
+            preg_match('/href\s*=\s*("|\')(.*?)\1/i', $attributes, $hrefMatch);
+
+            if (!empty($hrefMatch[2])) {
+                $href = trim($hrefMatch[2]);
+
+                if (
+                    preg_match('/^(javascript|data|vbscript):/i', $href) ||
+                    !preg_match('/^(https?:\/\/|mailto:|\/|#)/i', $href)
+                ) {
+                    return '<a>';
+                }
+
+                $safeHref = htmlspecialchars($href, ENT_QUOTES, 'UTF-8');
+
+                return '<a href="' . $safeHref . '" target="_blank" rel="noopener noreferrer">';
+            }
+
+            return '<a>';
+        },
+        $html
+    );
+
+    return trim($html);
+}
+
 if (isset($_POST['submit'])) {
-    $judul    = trim($_POST['judul']);
+
+    $judul = trim($_POST['judul']);
     $kategori = trim($_POST['kategori']);
-    $penulis  = trim($_POST['penulis']);
-    $konten   = trim($_POST['konten']);
+    $penulis = trim($_POST['penulis']);
+    $konten = trim($_POST['konten']);
 
     $gambar = '';
 
     if (empty($judul) || empty($kategori) || empty($penulis) || empty($konten)) {
         $error = "Waduh, semua kolom wajib diisi ya, Lur!";
     } else {
-        if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === 0) {
-            $namaFile = $_FILES['gambar']['name'];
-            $ukuranFile = $_FILES['gambar']['size'];
-            $tmpName = $_FILES['gambar']['tmp_name'];
 
-            $ekstensiValid = ['jpg', 'jpeg', 'png', 'webp'];
-            $ekstensiGambar = explode('.', $namaFile);
-            $ekstensiGambar = strtolower(end($ekstensiGambar));
+        $konten = sanitizeEditorContent($konten);
 
-            if (!in_array($ekstensiGambar, $ekstensiValid)) {
-                $error = "Ekstensi gambar tidak valid! Gunakan JPG, JPEG, PNG, atau WEBP.";
-            } elseif ($ukuranFile > 2 * 1024 * 1024) {
-                $error = "Ukuran gambar terlalu besar, Lur! Maksimal 2MB.";
-            } else {
-                if (!is_dir('../../assets/img')) {
-                    mkdir('../../assets/img', 0777, true);
-                }
+        $kontenTeks = trim(strip_tags($konten));
 
-                $namaFileBaru = uniqid() . '.' . $ekstensiGambar;
-                $tujuan = '../../assets/img/' . $namaFileBaru;
+        if (empty($kontenTeks)) {
+            $error = "Isi kabar tidak boleh kosong, Lur!";
+        } else {
 
-                if (move_uploaded_file($tmpName, $tujuan)) {
-                    $gambar = $namaFileBaru;
+            if (isset($_FILES['gambar']) && $_FILES['gambar']['error'] === 0) {
+
+                $namaFile = $_FILES['gambar']['name'];
+                $ukuranFile = $_FILES['gambar']['size'];
+                $tmpName = $_FILES['gambar']['tmp_name'];
+
+                $ekstensiValid = ['jpg', 'jpeg', 'png', 'webp'];
+
+                $ekstensiGambar = explode('.', $namaFile);
+                $ekstensiGambar = strtolower(end($ekstensiGambar));
+
+                if (!in_array($ekstensiGambar, $ekstensiValid)) {
+
+                    $error = "Ekstensi gambar tidak valid! Gunakan JPG, JPEG, PNG, atau WEBP.";
+                } elseif ($ukuranFile > 2 * 1024 * 1024) {
+
+                    $error = "Ukuran gambar terlalu besar, Lur! Maksimal 2MB.";
                 } else {
-                    $error = "Gagal mengunggah gambar.";
+
+                    if (!is_dir('../../assets/img')) {
+                        mkdir('../../assets/img', 0777, true);
+                    }
+
+                    $namaFileBaru = uniqid() . '.' . $ekstensiGambar;
+                    $tujuan = '../../assets/img/' . $namaFileBaru;
+
+                    if (move_uploaded_file($tmpName, $tujuan)) {
+
+                        $gambar = $namaFileBaru;
+                    } else {
+
+                        $error = "Gagal mengunggah gambar.";
+                    }
                 }
             }
-        }
 
-        if (empty($error)) {
-            $jumlahKata = str_word_count(strip_tags($konten));
-            $read_time = max(1, ceil($jumlahKata / 200));
+            if (empty($error)) {
 
-            $stmt = mysqli_prepare(
-                $conn,
-                "INSERT INTO berita (judul, kategori, penulis, konten, gambar, read_time) VALUES (?, ?, ?, ?, ?, ?)"
-            );
+                $jumlahKata = str_word_count(strip_tags($konten));
+                $read_time = max(1, ceil($jumlahKata / 200));
 
-            mysqli_stmt_bind_param(
-                $stmt,
-                "sssssi",
-                $judul,
-                $kategori,
-                $penulis,
-                $konten,
-                $gambar,
-                $read_time
-            );
+                $stmt = mysqli_prepare(
+                    $conn,
+                    "INSERT INTO berita (judul, kategori, penulis, konten, gambar, read_time) VALUES (?, ?, ?, ?, ?, ?)"
+                );
 
-            if (mysqli_stmt_execute($stmt)) {
-                header("Location: index.php?status=sukses");
-                exit;
-            } else {
-                $error = "Gagal menyimpan kabar ke database: " . mysqli_error($conn);
+                mysqli_stmt_bind_param(
+                    $stmt,
+                    "sssssi",
+                    $judul,
+                    $kategori,
+                    $penulis,
+                    $konten,
+                    $gambar,
+                    $read_time
+                );
+
+                if (mysqli_stmt_execute($stmt)) {
+
+                    header("Location: index.php?status=sukses");
+                    exit;
+                } else {
+
+                    $error = "Gagal menyimpan kabar ke database: " . mysqli_error($conn);
+                }
+
+                mysqli_stmt_close($stmt);
             }
-
-            mysqli_stmt_close($stmt);
         }
     }
 }
@@ -133,7 +198,7 @@ if (isset($_POST['submit'])) {
                 linear-gradient(135deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%),
                 linear-gradient(225deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%),
                 linear-gradient(45deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%),
-                linear-gradient(315deg, rgba(255, 255, 255, 0.035) 25%, transparent 25%);
+                linear-gradient(315deg, rgba(255, 255, 255, 0.035) 25%, #542f1b 25%);
             background-position: 12px 0, 12px 0, 0 0, 0 0;
             background-size: 24px 24px;
         }
@@ -174,6 +239,152 @@ if (isset($_POST['submit'])) {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        .editor-content {
+            min-height: 320px;
+            outline: none;
+        }
+
+        .editor-content:empty::before {
+            content: attr(data-placeholder);
+            color: rgb(168 162 158);
+            pointer-events: none;
+        }
+
+        .editor-content p {
+            margin: 0 0 0.85rem;
+        }
+
+        .editor-content h2 {
+            font-size: 1.5rem;
+            line-height: 1.3;
+            font-weight: 800;
+            color: #292524;
+            margin: 1.2rem 0 0.7rem;
+        }
+
+        .editor-content h3 {
+            font-size: 1.25rem;
+            line-height: 1.35;
+            font-weight: 800;
+            color: #292524;
+            margin: 1.1rem 0 0.6rem;
+        }
+
+        .editor-content h4 {
+            font-size: 1.05rem;
+            line-height: 1.4;
+            font-weight: 800;
+            color: #292524;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .editor-content ul,
+        .editor-content ol {
+            padding-left: 1.5rem;
+            margin: 0.75rem 0;
+        }
+
+        .editor-content ul {
+            list-style-type: disc;
+        }
+
+        .editor-content ol {
+            list-style-type: decimal;
+        }
+
+        .editor-content li {
+            margin: 0.35rem 0;
+        }
+
+        .editor-content blockquote {
+            border-left: 3px solid #d97706;
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            background: #fffbeb;
+            color: #57534e;
+            font-style: italic;
+            border-radius: 0 0.75rem 0.75rem 0;
+        }
+
+        .editor-content a {
+            color: #92400e;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .toolbar-button {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: rgb(87 83 78);
+            transition:
+                background-color 150ms ease,
+                color 150ms ease,
+                box-shadow 150ms ease;
+        }
+
+        .toolbar-button:hover {
+            background: rgb(245 245 244);
+            color: #78350f;
+        }
+
+        .toolbar-button.active {
+            background: rgb(254 243 199);
+            color: #78350f;
+            box-shadow: inset 0 0 0 1px rgb(245 158 11 / 0.35);
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            height: 22px;
+            background: rgb(231 229 228);
+            margin: 0 3px;
+        }
+
+        .toolbar-select {
+            height: 34px;
+            border: 0;
+            background: transparent;
+            color: rgb(87 83 78);
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 8px;
+            padding: 0 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .toolbar-select:hover {
+            background: rgb(245 245 244);
+            color: #78350f;
+        }
+
+        .toolbar-select.active {
+            background: rgb(254 243 199);
+            color: #78350f;
+            box-shadow: inset 0 0 0 1px rgb(245 158 11 / 0.35);
+        }
+
+        @media (max-width: 640px) {
+
+            .editor-content {
+                min-height: 280px;
+            }
+
+            .toolbar-button {
+                width: 32px;
+                height: 32px;
+            }
+
+            .toolbar-divider {
+                display: none;
+            }
+
         }
     </style>
 
@@ -290,15 +501,11 @@ if (isset($_POST['submit'])) {
                             <div>
 
                                 <p class="text-sm font-black text-stone-800">
-
                                     Tulis Kabar
-
                                 </p>
 
                                 <p class="text-[11px] text-stone-400">
-
                                     Isi informasi di bawah dengan lengkap
-
                                 </p>
 
                             </div>
@@ -334,9 +541,7 @@ if (isset($_POST['submit'])) {
                                     <div>
 
                                         <p class="text-[10px] uppercase tracking-[0.14em] font-bold text-rose-600">
-
                                             Perlu diperiksa
-
                                         </p>
 
                                         <span
@@ -397,9 +602,7 @@ if (isset($_POST['submit'])) {
                                 <div class="flex items-center justify-between mt-1.5">
 
                                     <span class="text-[11px] text-stone-400">
-
                                         Buat judul yang singkat dan mudah dipahami.
-
                                     </span>
 
                                     <span
@@ -436,27 +639,19 @@ if (isset($_POST['submit'])) {
                                             class="form-field appearance-none w-full px-4 py-3 pr-10 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:border-amber-600 focus:ring-4 focus:ring-amber-600/10 cursor-pointer">
 
                                             <option value="Insight" <?= (isset($_POST['kategori']) && $_POST['kategori'] === 'Insight') ? 'selected' : ''; ?>>
-
                                                 Insight / Opini
-
                                             </option>
 
                                             <option value="Lokal" <?= (isset($_POST['kategori']) && $_POST['kategori'] === 'Lokal') ? 'selected' : ''; ?>>
-
                                                 Warta Lokal
-
                                             </option>
 
                                             <option value="Budaya" <?= (isset($_POST['kategori']) && $_POST['kategori'] === 'Budaya') ? 'selected' : ''; ?>>
-
                                                 Budaya & Tradisi
-
                                             </option>
 
                                             <option value="Gaya Urip" <?= (isset($_POST['kategori']) && $_POST['kategori'] === 'Gaya Urip') ? 'selected' : ''; ?>>
-
                                                 Gaya Urip
-
                                             </option>
 
                                         </select>
@@ -486,7 +681,9 @@ if (isset($_POST['submit'])) {
                                             required
                                             class="form-field appearance-none w-full px-4 py-3 pr-10 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:border-amber-600 focus:ring-4 focus:ring-amber-600/10 cursor-pointer">
 
-                                            <option value="">Pilih penulis</option>
+                                            <option value="">
+                                                Pilih penulis
+                                            </option>
 
                                             <?php foreach ($users as $user): ?>
 
@@ -535,9 +732,7 @@ if (isset($_POST['submit'])) {
                                     Foto Utama
 
                                     <span class="text-[11px] font-normal text-stone-400 ml-1">
-
                                         Opsional
-
                                     </span>
 
                                 </label>
@@ -557,23 +752,17 @@ if (isset($_POST['submit'])) {
                                         <div class="min-w-0">
 
                                             <p class="text-sm font-bold text-stone-700">
-
                                                 Pilih foto untuk kabarmu
-
                                             </p>
 
                                             <p class="text-xs text-stone-400 mt-1 leading-relaxed">
-
                                                 JPG, JPEG, PNG, atau WEBP. Maksimal 2MB.
-
                                             </p>
 
                                         </div>
 
                                         <span class="sm:ml-auto inline-flex items-center justify-center bg-white border border-stone-200 text-stone-600 text-xs font-semibold px-3 py-2 rounded-lg shadow-sm">
-
                                             Pilih File
-
                                         </span>
 
                                     </div>
@@ -616,15 +805,11 @@ if (isset($_POST['submit'])) {
                                         <div>
 
                                             <p class="text-xs font-bold text-stone-700">
-
                                                 Pratinjau foto
-
                                             </p>
 
                                             <p class="text-[11px] text-stone-400 mt-1">
-
                                                 Foto ini akan digunakan sebagai gambar utama kabar.
-
                                             </p>
 
                                         </div>
@@ -661,19 +846,194 @@ if (isset($_POST['submit'])) {
 
                                 </div>
 
-                                <textarea
-                                    name="konten"
-                                    id="input-konten"
-                                    rows="10"
-                                    required
-                                    placeholder="Tuliskan berita atau ulasan mendalammu di sini..."
-                                    class="form-field w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-800 placeholder:text-stone-400 leading-relaxed resize-y focus:outline-none focus:border-amber-600 focus:ring-4 focus:ring-amber-600/10"><?= isset($_POST['konten']) ? htmlspecialchars($_POST['konten']) : ''; ?></textarea>
+                                <div class="border border-stone-200 rounded-2xl overflow-hidden bg-stone-50 focus-within:border-amber-600 focus-within:ring-4 focus-within:ring-amber-600/10 transition">
+
+                                    <div
+                                        id="editor-toolbar"
+                                        class="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-stone-200 bg-white">
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="bold"
+                                            title="Tebal">
+
+                                            <i class="fa-solid fa-bold text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="italic"
+                                            title="Miring">
+
+                                            <i class="fa-solid fa-italic text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="underline"
+                                            title="Garis bawah">
+
+                                            <i class="fa-solid fa-underline text-xs"></i>
+
+                                        </button>
+
+                                        <span class="toolbar-divider"></span>
+
+                                        <select
+                                            id="formatSelect"
+                                            class="toolbar-select"
+                                            title="Format teks">
+
+                                            <option value="p">
+                                                Paragraf
+                                            </option>
+
+                                            <option value="h2">
+                                                Heading 2
+                                            </option>
+
+                                            <option value="h3">
+                                                Heading 3
+                                            </option>
+
+                                            <option value="h4">
+                                                Heading 4
+                                            </option>
+
+                                        </select>
+
+                                        <span class="toolbar-divider"></span>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="insertUnorderedList"
+                                            title="Daftar poin">
+
+                                            <i class="fa-solid fa-list-ul text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="insertOrderedList"
+                                            title="Daftar bernomor">
+
+                                            <i class="fa-solid fa-list-ol text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="formatBlock"
+                                            data-value="blockquote"
+                                            title="Kutipan">
+
+                                            <i class="fa-solid fa-quote-left text-xs"></i>
+
+                                        </button>
+
+                                        <span class="toolbar-divider"></span>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="justifyLeft"
+                                            title="Rata kiri">
+
+                                            <i class="fa-solid fa-align-left text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="justifyCenter"
+                                            title="Rata tengah">
+
+                                            <i class="fa-solid fa-align-center text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="justifyRight"
+                                            title="Rata kanan">
+
+                                            <i class="fa-solid fa-align-right text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="justifyFull"
+                                            title="Rata penuh">
+
+                                            <i class="fa-solid fa-align-justify text-xs"></i>
+
+                                        </button>
+
+                                        <span class="toolbar-divider"></span>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            id="link-button"
+                                            title="Tambahkan tautan">
+
+                                            <i class="fa-solid fa-link text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="undo"
+                                            title="Undo">
+
+                                            <i class="fa-solid fa-rotate-left text-xs"></i>
+
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="toolbar-button"
+                                            data-command="redo"
+                                            title="Redo">
+
+                                            <i class="fa-solid fa-rotate-right text-xs"></i>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div
+                                        id="editor-content"
+                                        class="editor-content px-4 py-4 text-sm text-stone-800 leading-7 bg-stone-50"
+                                        contenteditable="true"
+                                        data-placeholder="Tuliskan berita atau ulasan mendalammu di sini..."><?= isset($_POST['konten']) ? $_POST['konten'] : ''; ?></div>
+
+                                    <textarea
+                                        name="konten"
+                                        id="input-konten"
+                                        class="hidden"></textarea>
+
+                                </div>
 
                                 <div class="flex items-center justify-between gap-3 mt-1.5">
 
                                     <p class="text-[11px] text-stone-400">
 
-                                        Tulis dengan jelas agar kabar mudah dipahami pembaca.
+                                        Gunakan toolbar untuk mengatur format tulisan agar lebih nyaman dibaca.
 
                                     </p>
 
@@ -749,15 +1109,11 @@ if (isset($_POST['submit'])) {
                     </div>
 
                     <p class="text-[10px] uppercase tracking-[0.16em] font-bold text-amber-300">
-
                         Sebelum Ngabar
-
                     </p>
 
                     <h2 class="text-lg font-black mt-1">
-
                         Biar kabarnya enak dibaca.
-
                     </h2>
 
                     <p class="text-xs text-stone-300 leading-relaxed mt-3">
@@ -861,9 +1217,7 @@ if (isset($_POST['submit'])) {
                         <div>
 
                             <p class="text-xs font-black text-amber-900">
-
                                 Estimasi Waktu Baca
-
                             </p>
 
                             <p class="text-[11px] text-amber-800/70 mt-1 leading-relaxed">
@@ -873,6 +1227,38 @@ if (isset($_POST['submit'])) {
                             </p>
 
                         </div>
+
+                    </div>
+
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-2xl p-5 shadow-sm">
+
+                    <p class="text-xs font-black text-[#542f1b] mb-3">
+
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-amber-700"></i>
+
+                        Tips Formatting
+
+                    </p>
+
+                    <div class="space-y-2.5 text-[11px] text-stone-500 leading-relaxed">
+
+                        <p>
+                            <strong class="text-stone-700">Heading</strong> cocok untuk membagi bagian penting dalam tulisan.
+                        </p>
+
+                        <p>
+                            <strong class="text-stone-700">Bold</strong> bisa digunakan untuk menekankan informasi penting.
+                        </p>
+
+                        <p>
+                            <strong class="text-stone-700">Quote</strong> cocok untuk kutipan atau pernyataan yang ingin ditonjolkan.
+                        </p>
+
+                        <p>
+                            Hindari terlalu banyak format agar tulisan tetap nyaman dibaca.
+                        </p>
 
                     </div>
 
@@ -990,7 +1376,9 @@ if (isset($_POST['submit'])) {
         const closeAlert = document.getElementById('close-alert');
 
         if (closeAlert && alertBox) {
+
             closeAlert.addEventListener('click', function() {
+
                 alertBox.style.opacity = '0';
                 alertBox.style.transform = 'translateY(-5px)';
                 alertBox.style.transition = 'opacity 250ms ease, transform 250ms ease';
@@ -998,7 +1386,9 @@ if (isset($_POST['submit'])) {
                 setTimeout(() => {
                     alertBox.style.display = 'none';
                 }, 250);
+
             });
+
         }
 
         const inputJudul = document.getElementById('input-judul');
@@ -1006,22 +1396,31 @@ if (isset($_POST['submit'])) {
         const maxLength = 255;
 
         if (inputJudul) {
+
             const updateCounter = () => {
+
                 const sisa = maxLength - inputJudul.value.length;
 
                 judulCounter.textContent = 'Sisa karakter: ' + sisa;
 
                 if (sisa < 20) {
+
                     judulCounter.classList.add('text-rose-600', 'font-semibold');
                     judulCounter.classList.remove('text-stone-400');
+
                 } else {
+
                     judulCounter.classList.remove('text-rose-600', 'font-semibold');
                     judulCounter.classList.add('text-stone-400');
+
                 }
+
             };
 
             inputJudul.addEventListener('input', updateCounter);
+
             updateCounter();
+
         }
 
         const inputGambar = document.getElementById('input-gambar');
@@ -1030,58 +1429,237 @@ if (isset($_POST['submit'])) {
         const removeImageBtn = document.getElementById('remove-image');
 
         if (inputGambar) {
+
             inputGambar.addEventListener('change', function(event) {
+
                 const file = event.target.files[0];
 
                 if (file) {
+
                     if (file.size > 2 * 1024 * 1024) {
+
                         alert('Ukuran file terlalu besar! Maksimal 2MB.');
+
                         inputGambar.value = '';
                         previewContainer.classList.add('hidden');
+
                         return;
                     }
 
                     const reader = new FileReader();
 
                     reader.onload = function(e) {
+
                         imagePreview.src = e.target.result;
                         previewContainer.classList.remove('hidden');
+
                     };
 
                     reader.readAsDataURL(file);
+
                 } else {
+
                     previewContainer.classList.add('hidden');
+
                 }
+
             });
+
         }
 
         if (removeImageBtn) {
+
             removeImageBtn.addEventListener('click', function() {
+
                 inputGambar.value = '';
                 imagePreview.src = '#';
                 previewContainer.classList.add('hidden');
+
             });
+
         }
 
         const formBerita = document.getElementById('form-berita');
+        const editorContent = document.getElementById('editor-content');
         const inputKonten = document.getElementById('input-konten');
         const wordCounter = document.getElementById('word-counter');
         const readTimePreview = document.getElementById('read-time-preview');
+        const toolbarButtons = document.querySelectorAll('.toolbar-button');
+        const formatSelect = document.getElementById('formatSelect');
+        const linkButton = document.getElementById('link-button');
 
-        const updateReadTime = () => {
-            if (!inputKonten || !wordCounter || !readTimePreview) {
+        let savedRange = null;
+
+        function saveSelection() {
+
+            const selection = window.getSelection();
+
+            if (!selection.rangeCount) {
                 return;
             }
 
-            const content = inputKonten.value.trim();
+            const range = selection.getRangeAt(0);
 
-            if (!content) {
+            if (editorContent.contains(range.commonAncestorContainer)) {
+                savedRange = range.cloneRange();
+            }
+
+        }
+
+        function restoreSelection() {
+
+            if (!savedRange) {
+                editorContent.focus();
+                return;
+            }
+
+            const selection = window.getSelection();
+
+            selection.removeAllRanges();
+            selection.addRange(savedRange);
+
+            editorContent.focus();
+
+        }
+
+        function getSelectionElement() {
+
+            const selection = window.getSelection();
+
+            if (!selection || !selection.rangeCount) {
+                return editorContent;
+            }
+
+            let node = selection.getRangeAt(0).startContainer;
+
+            if (node.nodeType === Node.TEXT_NODE) {
+                node = node.parentElement;
+            }
+
+            if (!node || !editorContent.contains(node)) {
+                return editorContent;
+            }
+
+            return node;
+
+        }
+
+        function updateToolbarState() {
+
+            toolbarButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            formatSelect.classList.remove('active');
+
+            const element = getSelectionElement();
+
+            if (element === editorContent) {
+                return;
+            }
+
+            const isBold = document.queryCommandState('bold');
+            const isItalic = document.queryCommandState('italic');
+            const isUnderline = document.queryCommandState('underline');
+            const isUnorderedList = document.queryCommandState('insertUnorderedList');
+            const isOrderedList = document.queryCommandState('insertOrderedList');
+            const isJustifyLeft = document.queryCommandState('justifyLeft');
+            const isJustifyCenter = document.queryCommandState('justifyCenter');
+            const isJustifyRight = document.queryCommandState('justifyRight');
+            const isJustifyFull = document.queryCommandState('justifyFull');
+
+            const stateMap = {
+                bold: isBold,
+                italic: isItalic,
+                underline: isUnderline,
+                insertUnorderedList: isUnorderedList,
+                insertOrderedList: isOrderedList,
+                justifyLeft: isJustifyLeft,
+                justifyCenter: isJustifyCenter,
+                justifyRight: isJustifyRight,
+                justifyFull: isJustifyFull
+            };
+
+            toolbarButtons.forEach(button => {
+
+                const command = button.dataset.command;
+
+                if (command && stateMap[command]) {
+                    button.classList.add('active');
+                }
+
+            });
+
+            let blockElement = element;
+
+            while (
+                blockElement &&
+                blockElement !== editorContent &&
+                !['P', 'H2', 'H3', 'H4', 'BLOCKQUOTE', 'LI'].includes(blockElement.tagName)
+            ) {
+                blockElement = blockElement.parentElement;
+            }
+
+            if (blockElement && blockElement !== editorContent) {
+
+                const tagName = blockElement.tagName.toLowerCase();
+
+                if (['h2', 'h3', 'h4'].includes(tagName)) {
+
+                    formatSelect.value = tagName;
+                    formatSelect.classList.add('active');
+
+                } else {
+
+                    formatSelect.value = 'p';
+
+                }
+
+                if (tagName === 'blockquote') {
+
+                    const quoteButton = document.querySelector(
+                        '[data-command="formatBlock"][data-value="blockquote"]'
+                    );
+
+                    if (quoteButton) {
+                        quoteButton.classList.add('active');
+                    }
+
+                }
+
+            } else {
+
+                formatSelect.value = 'p';
+
+            }
+
+        }
+
+        function updateEditorValue() {
+
+            inputKonten.value = editorContent.innerHTML.trim();
+
+            const text = editorContent.innerText
+                .replace(/\u00a0/g, ' ')
+                .trim();
+
+            if (!text) {
+
                 wordCounter.textContent = '0 kata';
-                readTimePreview.innerHTML = '<i class="fa-regular fa-clock"></i> 1 menit baca';
+
+                readTimePreview.innerHTML =
+                    '<i class="fa-regular fa-clock"></i> 1 menit baca';
+
+                updateToolbarState();
+
                 return;
+
             }
 
-            const words = content.split(/\s+/).filter(word => word.length > 0);
+            const words = text
+                .split(/\s+/)
+                .filter(word => word.length > 0);
+
             const wordCount = words.length;
             const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
@@ -1091,26 +1669,268 @@ if (isset($_POST['submit'])) {
                 '<i class="fa-regular fa-clock"></i> ' +
                 readTime +
                 ' menit baca';
-        };
 
-        if (inputKonten) {
-            inputKonten.addEventListener('input', updateReadTime);
-            updateReadTime();
+            updateToolbarState();
+
         }
+
+        function executeCommand(command, value = null) {
+
+            restoreSelection();
+
+            document.execCommand(
+                command,
+                false,
+                value
+            );
+
+            updateEditorValue();
+
+            editorContent.focus();
+
+            saveSelection();
+
+            updateToolbarState();
+
+        }
+
+        toolbarButtons.forEach(button => {
+
+            button.addEventListener('mousedown', function(event) {
+
+                event.preventDefault();
+
+                saveSelection();
+
+            });
+
+            button.addEventListener('click', function() {
+
+                const command = this.dataset.command;
+                const value = this.dataset.value || null;
+
+                if (!command) {
+                    return;
+                }
+
+                executeCommand(command, value);
+
+            });
+
+        });
+
+        formatSelect.addEventListener('mousedown', function() {
+            saveSelection();
+        });
+
+        formatSelect.addEventListener('change', function() {
+
+            restoreSelection();
+
+            const value = this.value;
+
+            document.execCommand(
+                'formatBlock',
+                false,
+                value
+            );
+
+            updateEditorValue();
+
+            editorContent.focus();
+
+            saveSelection();
+
+            updateToolbarState();
+
+        });
+
+        linkButton.addEventListener('mousedown', function(event) {
+
+            event.preventDefault();
+
+            saveSelection();
+
+        });
+
+        linkButton.addEventListener('click', function() {
+
+            restoreSelection();
+
+            const selection = window.getSelection();
+
+            if (!selection || selection.toString().trim() === '') {
+
+                alert('Blok teks yang ingin dijadikan tautan terlebih dahulu.');
+
+                return;
+            }
+
+            const url = prompt('Masukkan URL tautan:');
+
+            if (!url) {
+                return;
+            }
+
+            let safeUrl = url.trim();
+
+            if (
+                !/^https?:\/\//i.test(safeUrl) &&
+                !/^mailto:/i.test(safeUrl) &&
+                !/^\//.test(safeUrl) &&
+                !/^#/i.test(safeUrl)
+            ) {
+                safeUrl = 'https://' + safeUrl;
+            }
+
+            if (/^(javascript|data|vbscript):/i.test(safeUrl)) {
+
+                alert('URL tidak valid.');
+
+                return;
+            }
+
+            document.execCommand(
+                'createLink',
+                false,
+                safeUrl
+            );
+
+            updateEditorValue();
+
+            editorContent.focus();
+
+            saveSelection();
+
+            updateToolbarState();
+
+        });
+
+        editorContent.addEventListener('mouseup', function() {
+
+            saveSelection();
+            updateToolbarState();
+
+        });
+
+        editorContent.addEventListener('keyup', function() {
+
+            saveSelection();
+            updateToolbarState();
+
+        });
+
+        editorContent.addEventListener('click', function() {
+
+            updateToolbarState();
+
+        });
+
+        editorContent.addEventListener('input', function() {
+
+            updateEditorValue();
+
+        });
+
+        document.addEventListener('selectionchange', function() {
+
+            if (document.activeElement === editorContent || editorContent.contains(document.activeElement)) {
+                updateToolbarState();
+            }
+
+        });
+
+        editorContent.addEventListener('paste', function(event) {
+
+            event.preventDefault();
+
+            const text = (
+                event.clipboardData ||
+                window.clipboardData
+            ).getData('text/plain');
+
+            document.execCommand(
+                'insertText',
+                false,
+                text
+            );
+
+            updateEditorValue();
+
+            saveSelection();
+
+            updateToolbarState();
+
+        });
+
+        editorContent.addEventListener('keydown', function(event) {
+
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b') {
+
+                event.preventDefault();
+
+                executeCommand('bold');
+
+            }
+
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'i') {
+
+                event.preventDefault();
+
+                executeCommand('italic');
+
+            }
+
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'u') {
+
+                event.preventDefault();
+
+                executeCommand('underline');
+
+            }
+
+        });
 
         if (formBerita) {
-            formBerita.addEventListener('submit', function(e) {
-                const judul = inputJudul.value.trim();
-                const kategori = formBerita.querySelector('[name="kategori"]').value.trim();
-                const penulis = formBerita.querySelector('[name="penulis"]').value.trim();
-                const konten = inputKonten.value.trim();
 
-                if (!judul || !kategori || !penulis || !konten) {
+            formBerita.addEventListener('submit', function(e) {
+
+                updateEditorValue();
+
+                const judul = inputJudul.value.trim();
+
+                const kategori = formBerita
+                    .querySelector('[name="kategori"]')
+                    .value
+                    .trim();
+
+                const penulis = formBerita
+                    .querySelector('[name="penulis"]')
+                    .value
+                    .trim();
+
+                const kontenTeks = editorContent.innerText
+                    .replace(/\u00a0/g, ' ')
+                    .trim();
+
+                if (!judul || !kategori || !penulis || !kontenTeks) {
+
                     alert('Waduh, semua kolom wajib diisi ya, Lur!');
+
                     e.preventDefault();
+
+                    return;
+
                 }
+
+                inputKonten.value = editorContent.innerHTML.trim();
+
             });
+
         }
+
+        updateEditorValue();
+        updateToolbarState();
     </script>
 
 </body>

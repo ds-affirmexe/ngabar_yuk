@@ -47,6 +47,14 @@
                     </a>
 
                     <a
+                        href="article.php"
+                        class="hover:text-amber-300 transition">
+
+                        Artikel
+
+                    </a>
+
+                    <a
                         href="about.php"
                         class="hover:text-amber-300 transition">
 

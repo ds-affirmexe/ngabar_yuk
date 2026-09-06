@@ -45,6 +45,10 @@ $query .= " ORDER BY id DESC";
 
 $stmt = mysqli_prepare($conn, $query);
 
+if (!$stmt) {
+    die("Gagal menyiapkan query: " . mysqli_error($conn));
+}
+
 if (!empty($params)) {
     mysqli_stmt_bind_param($stmt, $types, ...$params);
 }
@@ -67,7 +71,8 @@ $result = mysqli_stmt_get_result($stmt);
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet"
+    <link
+        rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -80,80 +85,89 @@ $result = mysqli_stmt_get_result($stmt);
             background-position: 0 0, 0 0, 8px 14px, 8px 14px;
             background-size: 16px 28px;
         }
+
+        .article-preview {
+            overflow: hidden;
+        }
+
+        .article-preview p {
+            margin-bottom: 0.75rem;
+        }
+
+        .article-preview h2 {
+            font-size: 1.125rem;
+            line-height: 1.4;
+            font-weight: 800;
+            color: #292524;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .article-preview h3 {
+            font-size: 1rem;
+            line-height: 1.4;
+            font-weight: 800;
+            color: #292524;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .article-preview h4 {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            font-weight: 800;
+            color: #292524;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .article-preview strong {
+            font-weight: 800;
+            color: #292524;
+        }
+
+        .article-preview em {
+            font-style: italic;
+        }
+
+        .article-preview u {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .article-preview ul {
+            list-style: disc;
+            padding-left: 1.25rem;
+            margin: 0.5rem 0;
+        }
+
+        .article-preview ol {
+            list-style: decimal;
+            padding-left: 1.25rem;
+            margin: 0.5rem 0;
+        }
+
+        .article-preview li {
+            margin-bottom: 0.25rem;
+        }
+
+        .article-preview blockquote {
+            border-left: 3px solid #d97706;
+            padding-left: 0.875rem;
+            margin: 0.75rem 0;
+            color: #78716c;
+            font-style: italic;
+        }
+
+        .article-preview a {
+            color: #92400e;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
     </style>
 
 </head>
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased min-h-screen flex flex-col selection:bg-amber-200 selection:text-amber-900">
 
-    <header class="sticky top-0 z-50">
-
-        <div class="bg-[#542f1b] text-stone-100 shadow-lg shadow-stone-900/10 javanese-pattern">
-
-            <div class="max-w-5xl mx-auto px-5">
-
-                <div class="h-[72px] flex items-center justify-between">
-
-                    <a href="index.php" class="group flex items-center gap-3">
-
-                        <div class="relative w-10 h-10 rounded-xl bg-amber-400 text-[#542f1b] flex items-center justify-center shadow-sm group-hover:-rotate-3 transition-transform duration-300">
-
-                            <i class="fa-solid fa-mug-hot text-lg"></i>
-
-                            <span class="absolute -right-1 -bottom-1 w-3 h-3 bg-[#542f1b] border-2 border-amber-400 rounded-full"></span>
-
-                        </div>
-
-                        <div class="leading-none">
-
-                            <div class="text-[20px] font-black tracking-tight">
-
-                                Ngabar
-                                <span class="text-amber-400">Yuk!</span>
-
-                            </div>
-
-                            <div class="text-[10px] uppercase tracking-[0.18em] text-stone-300 mt-1">
-
-                                Warta • Reriungan • Insight
-
-                            </div>
-
-                        </div>
-
-                    </a>
-
-                    <nav class="flex items-center gap-1.5 sm:gap-2">
-
-                        <a href="index.php"
-                            class="inline-flex items-center gap-2 text-amber-300 bg-white/5 font-semibold text-sm px-3 py-2.5 rounded-xl transition">
-
-                            <i class="fa-solid fa-house text-xs"></i>
-
-                            <span class="hidden sm:inline">
-                                Beranda
-                            </span>
-
-                        </a>
-
-                        <a href="about.php"
-                            class="hidden sm:inline-flex items-center gap-2 text-stone-200 hover:text-amber-300 font-semibold text-sm px-3 py-2.5 rounded-xl hover:bg-white/5 transition">
-
-                            <i class="fa-solid fa-circle-info text-xs"></i>
-
-                            Tentang
-
-                        </a>
-
-                    </nav>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </header>
+    <?php include 'assets/header.php'; ?>
 
     <main class="flex-1">
 
@@ -191,19 +205,9 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </p>
 
-                    <!-- <div class="flex flex-wrap items-center gap-3 mt-7">
-
-                        <a href="create.php"
-                            class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#542f1b] font-bold text-sm px-5 py-3 rounded-xl transition shadow-sm">
-
-                            <i class="fa-solid fa-pen-to-square"></i>
-
-                            Tulis Kabar
-
-                        </a> -->
-
-                    <a href="#kabar"
-                        class="inline-flex items-center gap-2 border border-white/15 hover:bg-white/10 text-stone-200 font-semibold text-sm px-5 py-3 rounded-xl transition">
+                    <a
+                        href="#kabar"
+                        class="inline-flex items-center gap-2 border border-white/15 hover:bg-white/10 text-stone-200 font-semibold text-sm px-5 py-3 rounded-xl transition mt-7">
 
                         Lihat Kabar
 
@@ -215,18 +219,18 @@ $result = mysqli_stmt_get_result($stmt);
 
             </div>
 
-            </div>
-
         </section>
 
         <section class="max-w-5xl mx-auto px-5 -mt-7 relative z-10">
 
-            <form method="GET" action=""
+            <form
+                method="GET"
+                action=""
                 class="bg-white border border-stone-200 rounded-2xl shadow-xl shadow-stone-900/5 p-3 md:p-4">
 
-                <div class="flex flex-col md:flex-row gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-[1fr_12rem_12rem_auto] gap-3">
 
-                    <div class="relative flex-1">
+                    <div class="relative">
 
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-stone-400">
 
@@ -243,7 +247,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </div>
 
-                    <div class="w-full md:w-48">
+                    <div>
 
                         <select
                             name="kategori"
@@ -273,6 +277,44 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </div>
 
+                    <div>
+
+                        <select
+                            name="read_time"
+                            class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-600 transition">
+
+                            <option value="">
+                                Semua Waktu Baca
+                            </option>
+
+                            <option value="1-3" <?= ($read_time === '1-3') ? 'selected' : ''; ?>>
+                                1–3 menit
+                            </option>
+
+                            <option value="4-6" <?= ($read_time === '4-6') ? 'selected' : ''; ?>>
+                                4–6 menit
+                            </option>
+
+                            <option value="7-9" <?= ($read_time === '7-9') ? 'selected' : ''; ?>>
+                                7–9 menit
+                            </option>
+
+                            <option value="10-12" <?= ($read_time === '10-12') ? 'selected' : ''; ?>>
+                                10–12 menit
+                            </option>
+
+                            <option value="13-15" <?= ($read_time === '13-15') ? 'selected' : ''; ?>>
+                                13–15 menit
+                            </option>
+
+                            <option value="15-plus" <?= ($read_time === '15-plus') ? 'selected' : ''; ?>>
+                                Lebih dari 15 menit
+                            </option>
+
+                        </select>
+
+                    </div>
+
                     <div class="flex gap-2">
 
                         <button
@@ -287,7 +329,8 @@ $result = mysqli_stmt_get_result($stmt);
 
                         <?php if (!empty($search) || !empty($kategori) || !empty($read_time)): ?>
 
-                            <a href="index.php"
+                            <a
+                                href="index.php"
                                 class="inline-flex items-center justify-center w-11 bg-stone-100 hover:bg-stone-200 border border-stone-200 text-stone-600 rounded-xl transition"
                                 title="Reset Filter">
 
@@ -305,7 +348,9 @@ $result = mysqli_stmt_get_result($stmt);
 
         </section>
 
-        <section id="kabar" class="max-w-5xl mx-auto px-5 py-12 md:py-14">
+        <section
+            id="kabar"
+            class="max-w-5xl mx-auto px-5 py-12 md:py-14">
 
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
 
@@ -335,6 +380,16 @@ $result = mysqli_stmt_get_result($stmt);
 
                 <div class="flex items-center gap-2">
 
+                    <a
+                        href="article.php"
+                        class="inline-flex items-center gap-2 bg-white hover:bg-stone-50 border border-stone-200 text-stone-700 px-3.5 py-2 rounded-xl text-xs font-bold transition">
+
+                        <i class="fa-solid fa-newspaper text-amber-700"></i>
+
+                        Lihat Semua Artikel
+
+                    </a>
+
                     <span class="inline-flex items-center gap-2 bg-amber-50 border border-amber-200/70 text-amber-900 px-3 py-2 rounded-xl text-xs font-semibold">
 
                         <i class="fa-solid fa-newspaper text-amber-700"></i>
@@ -357,7 +412,8 @@ $result = mysqli_stmt_get_result($stmt);
 
                             <?php if (!empty($row['gambar']) && file_exists('assets/img/' . $row['gambar'])): ?>
 
-                                <a href="detail.php?id=<?= $row['id']; ?>"
+                                <a
+                                    href="detail.php?id=<?= $row['id']; ?>"
                                     class="block h-52 overflow-hidden bg-stone-100">
 
                                     <img
@@ -369,7 +425,8 @@ $result = mysqli_stmt_get_result($stmt);
 
                             <?php else: ?>
 
-                                <a href="detail.php?id=<?= $row['id']; ?>"
+                                <a
+                                    href="detail.php?id=<?= $row['id']; ?>"
                                     class="block h-32 bg-[#542f1b] relative overflow-hidden">
 
                                     <div class="absolute inset-0 javanese-pattern opacity-60"></div>
@@ -394,7 +451,16 @@ $result = mysqli_stmt_get_result($stmt);
 
                                     <span class="inline-flex bg-amber-50 border border-amber-200/70 text-amber-900 text-[11px] font-bold px-2.5 py-1 rounded-lg">
 
-                                        <?= htmlspecialchars($row['kategori']); ?>
+                                        <?php
+                                        $categoryLabels = [
+                                            'Insight' => 'Insight / Opini',
+                                            'Lokal' => 'Warta Lokal',
+                                            'Budaya' => 'Budaya & Tradisi',
+                                            'Gaya Urip' => 'Gaya Urip'
+                                        ];
+
+                                        echo htmlspecialchars($categoryLabels[$row['kategori']] ?? $row['kategori']);
+                                        ?>
 
                                     </span>
 
@@ -430,11 +496,11 @@ $result = mysqli_stmt_get_result($stmt);
 
                                 </h3>
 
-                                <p class="text-sm text-stone-500 leading-relaxed mt-3 line-clamp-3">
+                                <div class="article-preview text-sm text-stone-500 leading-relaxed mt-3 line-clamp-4">
 
-                                    <?= htmlspecialchars($row['konten']); ?>
+                                    <?= $row['konten']; ?>
 
-                                </p>
+                                </div>
 
                                 <div class="mt-auto pt-5">
 
@@ -442,7 +508,6 @@ $result = mysqli_stmt_get_result($stmt);
 
                                         <a
                                             href="author.php?nama=<?= urlencode($row['penulis']); ?>"
-                                            onclick="event.stopPropagation();"
                                             class="flex items-center gap-2 min-w-0 group/author">
 
                                             <div class="w-8 h-8 rounded-lg bg-stone-100 text-stone-500 flex items-center justify-center flex-shrink-0 group-hover/author:bg-amber-50 group-hover/author:text-amber-800 transition">
@@ -565,9 +630,7 @@ $result = mysqli_stmt_get_result($stmt);
 
     </main>
 
-    <?php
-    include 'assets/footer.php'
-    ?>
+    <?php include 'assets/footer.php'; ?>
 
     <?php if (isset($_GET['status'])): ?>
 
@@ -576,6 +639,7 @@ $result = mysqli_stmt_get_result($stmt);
             const status = urlParams.get('status');
 
             if (status) {
+
                 const messages = {
                     sukses: 'Kabar baru berhasil disebarkan, Lur.',
                     update: 'Perubahan kabar berhasil disimpan.',
@@ -583,6 +647,7 @@ $result = mysqli_stmt_get_result($stmt);
                 };
 
                 if (messages[status]) {
+
                     const notification = document.createElement('div');
 
                     notification.className = 'fixed bottom-5 right-5 left-5 sm:left-auto sm:max-w-sm bg-[#3a2113] text-white border border-white/10 rounded-xl shadow-2xl px-4 py-3 z-[100] flex items-start gap-3';
@@ -614,7 +679,9 @@ $result = mysqli_stmt_get_result($stmt);
                     }, 4500);
 
                     window.history.replaceState({}, document.title, window.location.pathname);
+
                 }
+
             }
         </script>
 

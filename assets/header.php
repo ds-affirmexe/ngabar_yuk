@@ -1,75 +1,82 @@
-  <header class="sticky top-0 z-50">
+<header class="sticky top-0 z-50">
 
-      <div class="bg-[#542f1b] text-stone-100 shadow-lg shadow-stone-900/10 javanese-pattern">
+    <div class="bg-[#542f1b] text-stone-100 shadow-lg shadow-stone-900/10 javanese-pattern">
 
-          <div class="max-w-5xl mx-auto px-5">
+        <div class="max-w-5xl mx-auto px-5">
 
-              <div class="h-[72px] flex items-center justify-between">
+            <div class="h-[72px] flex items-center justify-between">
 
-                  <a href="index.php" class="group flex items-center gap-3">
+                <a href="index.php" class="group flex items-center gap-3">
 
-                      <div class="relative w-10 h-10 rounded-xl bg-amber-400 text-[#542f1b] flex items-center justify-center shadow-sm group-hover:-rotate-3 transition-transform duration-300">
+                    <div class="relative w-10 h-10 rounded-xl bg-amber-400 text-[#542f1b] flex items-center justify-center shadow-sm group-hover:-rotate-3 transition-transform duration-300">
 
-                          <i class="fa-solid fa-mug-hot text-lg"></i>
+                        <i class="fa-solid fa-mug-hot text-lg"></i>
 
-                          <span class="absolute -right-1 -bottom-1 w-3 h-3 bg-[#542f1b] border-2 border-amber-400 rounded-full"></span>
+                        <span class="absolute -right-1 -bottom-1 w-3 h-3 bg-[#542f1b] border-2 border-amber-400 rounded-full"></span>
 
-                      </div>
+                    </div>
 
-                      <div class="leading-none">
+                    <div class="leading-none">
 
-                          <div class="text-[20px] font-black tracking-tight">
+                        <div class="text-[20px] font-black tracking-tight">
 
-                              Ngabar
-                              <span class="text-amber-400">Yuk!</span>
+                            Ngabar
+                            <span class="text-amber-400">Yuk!</span>
 
-                          </div>
+                        </div>
 
-                          <div class="text-[10px] uppercase tracking-[0.18em] text-stone-300 mt-1">
+                        <div class="text-[10px] uppercase tracking-[0.18em] text-stone-300 mt-1">
 
-                              Warta • Reriungan • Insight
+                            Warta • Reriungan • Insight
 
-                          </div>
+                        </div>
 
-                      </div>
+                    </div>
 
-                  </a>
+                </a>
 
-                  <nav class="flex items-center gap-1.5 sm:gap-2">
+                <nav class="flex items-center gap-1.5 sm:gap-2">
 
-                      <a href="index.php"
-                          class="inline-flex items-center gap-2 text-stone-200 hover:text-amber-300 font-semibold text-sm px-3 py-2.5 rounded-xl hover:bg-white/5 transition">
+                    <a
+                        href="index.php"
+                        class="inline-flex items-center gap-2 text-stone-200 hover:text-amber-300 font-semibold text-sm px-3 py-2.5 rounded-xl hover:bg-white/5 transition">
 
-                          <i class="fa-solid fa-house text-xs"></i>
+                        <i class="fa-solid fa-house text-xs"></i>
 
-                          <span class="hidden sm:inline">Beranda</span>
+                        <span class="hidden sm:inline">
+                            Beranda
+                        </span>
 
-                      </a>
+                    </a>
 
-                      <a href="about.php"
-                          class="hidden sm:inline-flex items-center gap-2 text-stone-200 hover:text-amber-300 font-semibold text-sm px-3 py-2.5 rounded-xl hover:bg-white/5 transition">
+                    <a
+                        href="article.php"
+                        class="inline-flex items-center gap-2 text-stone-200 hover:text-amber-300 font-semibold text-sm px-3 py-2.5 rounded-xl hover:bg-white/5 transition">
 
-                          <i class="fa-solid fa-circle-info text-xs"></i>
+                        <i class="fa-solid fa-newspaper text-xs"></i>
 
-                          Tentang
+                        <span class="hidden sm:inline">
+                            Artikel
+                        </span>
 
-                      </a>
+                    </a>
 
-                      <a href="index.php"
-                          class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/10 text-white font-semibold text-sm px-3.5 py-2.5 rounded-xl transition">
+                    <a
+                        href="about.php"
+                        class="hidden sm:inline-flex items-center gap-2 text-stone-200 hover:text-amber-300 font-semibold text-sm px-3 py-2.5 rounded-xl hover:bg-white/5 transition">
 
-                          <i class="fa-solid fa-arrow-left text-xs"></i>
+                        <i class="fa-solid fa-circle-info text-xs"></i>
 
-                          <span class="hidden sm:inline">Kembali</span>
+                        Tentang
 
-                      </a>
+                    </a>
 
-                  </nav>
+                </nav>
 
-              </div>
+            </div>
 
-          </div>
+        </div>
 
-      </div>
+    </div>
 
-  </header>
+</header>
