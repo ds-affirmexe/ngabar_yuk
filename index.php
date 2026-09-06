@@ -2,7 +2,7 @@
 
 require_once 'config.php';
 
-$search   = isset($_GET['search']) ? trim($_GET['search']) : '';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $kategori = isset($_GET['kategori']) ? trim($_GET['kategori']) : '';
 $read_time = isset($_GET['read_time']) ? trim($_GET['read_time']) : '';
 
@@ -130,7 +130,9 @@ $result = mysqli_stmt_get_result($stmt);
 
                             <i class="fa-solid fa-house text-xs"></i>
 
-                            <span class="hidden sm:inline">Beranda</span>
+                            <span class="hidden sm:inline">
+                                Beranda
+                            </span>
 
                         </a>
 
@@ -140,16 +142,6 @@ $result = mysqli_stmt_get_result($stmt);
                             <i class="fa-solid fa-circle-info text-xs"></i>
 
                             Tentang
-
-                        </a>
-
-                        <a href="create.php"
-                            class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#542f1b] font-bold text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm">
-
-                            <i class="fa-solid fa-pen text-xs"></i>
-
-                            <span class="hidden sm:inline">Tulis Kabar</span>
-                            <span class="sm:hidden">Tulis</span>
 
                         </a>
 
@@ -184,7 +176,10 @@ $result = mysqli_stmt_get_result($stmt);
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05]">
 
                         Apa kabar hari ini,
-                        <span class="text-amber-400">Lur?</span>
+
+                        <span class="text-amber-400">
+                            Lur?
+                        </span>
 
                     </h1>
 
@@ -196,7 +191,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </p>
 
-                    <div class="flex flex-wrap items-center gap-3 mt-7">
+                    <!-- <div class="flex flex-wrap items-center gap-3 mt-7">
 
                         <a href="create.php"
                             class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#542f1b] font-bold text-sm px-5 py-3 rounded-xl transition shadow-sm">
@@ -205,20 +200,20 @@ $result = mysqli_stmt_get_result($stmt);
 
                             Tulis Kabar
 
-                        </a>
+                        </a> -->
 
-                        <a href="#kabar"
-                            class="inline-flex items-center gap-2 border border-white/15 hover:bg-white/10 text-stone-200 font-semibold text-sm px-5 py-3 rounded-xl transition">
+                    <a href="#kabar"
+                        class="inline-flex items-center gap-2 border border-white/15 hover:bg-white/10 text-stone-200 font-semibold text-sm px-5 py-3 rounded-xl transition">
 
-                            Lihat Kabar
+                        Lihat Kabar
 
-                            <i class="fa-solid fa-arrow-down text-xs"></i>
+                        <i class="fa-solid fa-arrow-down text-xs"></i>
 
-                        </a>
-
-                    </div>
+                    </a>
 
                 </div>
+
+            </div>
 
             </div>
 
@@ -254,7 +249,9 @@ $result = mysqli_stmt_get_result($stmt);
                             name="kategori"
                             class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-600 transition">
 
-                            <option value="">Semua Kategori</option>
+                            <option value="">
+                                Semua Kategori
+                            </option>
 
                             <option value="Insight" <?= ($kategori === 'Insight') ? 'selected' : ''; ?>>
                                 Insight / Opini
@@ -282,7 +279,9 @@ $result = mysqli_stmt_get_result($stmt);
                             name="read_time"
                             class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-600 transition">
 
-                            <option value="">Semua Durasi</option>
+                            <option value="">
+                                Semua Durasi
+                            </option>
 
                             <option value="1-3" <?= ($read_time === '1-3') ? 'selected' : ''; ?>>
                                 1–3 menit
@@ -479,9 +478,12 @@ $result = mysqli_stmt_get_result($stmt);
 
                                     <div class="border-t border-stone-100 pt-4 flex items-center justify-between gap-3">
 
-                                        <div class="flex items-center gap-2 min-w-0">
+                                        <a
+                                            href="author.php?nama=<?= urlencode($row['penulis']); ?>"
+                                            onclick="event.stopPropagation();"
+                                            class="flex items-center gap-2 min-w-0 group/author">
 
-                                            <div class="w-8 h-8 rounded-lg bg-stone-100 text-stone-500 flex items-center justify-center flex-shrink-0">
+                                            <div class="w-8 h-8 rounded-lg bg-stone-100 text-stone-500 flex items-center justify-center flex-shrink-0 group-hover/author:bg-amber-50 group-hover/author:text-amber-800 transition">
 
                                                 <i class="fa-solid fa-user-pen text-xs"></i>
 
@@ -495,7 +497,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                                                 </p>
 
-                                                <p class="text-xs text-stone-700 font-bold truncate">
+                                                <p class="text-xs text-stone-700 font-bold truncate group-hover/author:text-amber-800 transition">
 
                                                     <?= htmlspecialchars($row['penulis']); ?>
 
@@ -503,7 +505,7 @@ $result = mysqli_stmt_get_result($stmt);
 
                                             </div>
 
-                                        </div>
+                                        </a>
 
                                         <div class="flex items-center gap-1.5 flex-shrink-0">
 
@@ -514,25 +516,6 @@ $result = mysqli_stmt_get_result($stmt);
                                                 Baca
 
                                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
-
-                                            </a>
-
-                                            <a
-                                                href="update.php?id=<?= $row['id']; ?>"
-                                                class="w-8 h-8 inline-flex items-center justify-center text-stone-500 hover:text-[#542f1b] hover:bg-stone-100 rounded-lg transition"
-                                                title="Sunting">
-
-                                                <i class="fa-solid fa-pen-to-square text-xs"></i>
-
-                                            </a>
-
-                                            <a
-                                                href="delete.php?id=<?= $row['id']; ?>"
-                                                onclick="return confirm('Yakin ingin menghapus kabar ini, Lur?');"
-                                                class="w-8 h-8 inline-flex items-center justify-center text-stone-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                                                title="Hapus">
-
-                                                <i class="fa-solid fa-trash-can text-xs"></i>
 
                                             </a>
 
@@ -610,65 +593,11 @@ $result = mysqli_stmt_get_result($stmt);
 
                         </p>
 
-                        <a
-                            href="create.php"
-                            class="inline-flex items-center gap-2 mt-6 bg-[#542f1b] hover:bg-[#432515] text-white font-bold text-sm px-5 py-2.5 rounded-xl transition shadow-sm">
-
-                            <i class="fa-solid fa-pen-to-square text-xs"></i>
-
-                            Tulis Kabar Pertama
-
-                        </a>
-
                     <?php endif; ?>
 
                 </div>
 
             <?php endif; ?>
-
-        </section>
-
-        <section class="max-w-5xl mx-auto px-5 pb-14">
-
-            <div class="bg-amber-50 border border-amber-200/70 rounded-2xl px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-                <div class="flex items-start gap-3">
-
-                    <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center flex-shrink-0">
-
-                        <i class="fa-solid fa-mug-hot text-sm"></i>
-
-                    </div>
-
-                    <div>
-
-                        <p class="text-sm font-bold text-amber-950">
-
-                            Punya cerita untuk dibagikan?
-
-                        </p>
-
-                        <p class="text-xs text-amber-900/70 mt-0.5">
-
-                            Tidak harus besar. Yang penting layak untuk dibicarakan.
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <a
-                    href="create.php"
-                    class="inline-flex items-center justify-center gap-2 bg-[#542f1b] hover:bg-[#432515] text-white font-bold text-xs px-4 py-2.5 rounded-lg transition">
-
-                    Tulis Kabar
-
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-
-                </a>
-
-            </div>
 
         </section>
 

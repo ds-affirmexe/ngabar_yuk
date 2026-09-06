@@ -124,14 +124,14 @@ require_once 'config.php';
 
                         </a>
 
-                        <a href="create.php"
+                        <!-- <a href="create.php"
                             class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-[#542f1b] font-bold text-sm px-3.5 py-2.5 rounded-xl transition shadow-sm">
 
                             <i class="fa-solid fa-plus text-xs"></i>
 
                             <span class="hidden sm:inline">Tulis Kabar</span>
 
-                        </a>
+                        </a> -->
 
                     </nav>
 
@@ -676,14 +676,14 @@ require_once 'config.php';
 
             </div>
 
-            <a href="create.php"
+            <!-- <a href="create.php"
                 class="inline-flex items-center justify-center gap-2 bg-[#542f1b] hover:bg-[#452515] text-white font-bold text-sm px-5 py-3 rounded-xl transition shadow-sm shrink-0">
 
                 <i class="fa-solid fa-pen-to-square text-xs"></i>
 
                 Tulis Kabar
 
-            </a>
+            </a> -->
 
         </section>
 

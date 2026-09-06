@@ -6,7 +6,8 @@
 
             <div>
 
-                <a href="index.php"
+                <a
+                    href="index.php"
                     class="inline-flex items-center gap-2.5 text-white group">
 
                     <span class="w-8 h-8 rounded-lg bg-amber-400 text-[#542f1b] flex items-center justify-center group-hover:-rotate-3 transition-transform">
@@ -37,24 +38,19 @@
 
                 <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
 
-                    <a href="index.php"
+                    <a
+                        href="index.php"
                         class="hover:text-amber-300 transition">
 
                         Beranda
 
                     </a>
 
-                    <a href="about.php"
+                    <a
+                        href="about.php"
                         class="hover:text-amber-300 transition">
 
                         Tentang
-
-                    </a>
-
-                    <a href="create.php"
-                        class="hover:text-amber-300 transition">
-
-                        Tulis Kabar
 
                     </a>
 
@@ -81,8 +77,11 @@
             <p class="text-[11px] text-stone-500">
 
                 © 2026 Ngabar Yuk! • Dibuat oleh
+
                 <span class="text-stone-300 font-semibold">
+
                     Aqeela Fazle Mawla Ramadhan
+
                 </span>
 
             </p>
@@ -98,3 +97,38 @@
     </div>
 
 </footer>
+
+<button
+    id="scrollToTop"
+    type="button"
+    aria-label="Kembali ke atas"
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
+    class="fixed right-5 bottom-5 z-50 hidden items-center gap-2 px-4 py-3 rounded-xl bg-[#542f1b] text-white border border-white/10 shadow-lg shadow-stone-900/20 hover:bg-[#6a3b21] hover:-translate-y-0.5 transition-all duration-300">
+
+    <i class="fa-solid fa-arrow-up text-amber-400 text-xs"></i>
+
+    <span class="text-xs font-bold">
+        Ke Atas
+    </span>
+
+</button>
+
+<script>
+    const scrollToTop = document.getElementById('scrollToTop');
+
+    function toggleScrollToTop() {
+        if (window.scrollY > 400) {
+            scrollToTop.classList.remove('hidden');
+            scrollToTop.classList.add('flex');
+        } else {
+            scrollToTop.classList.add('hidden');
+            scrollToTop.classList.remove('flex');
+        }
+    }
+
+    window.addEventListener('scroll', toggleScrollToTop, {
+        passive: true
+    });
+
+    toggleScrollToTop();
+</script>

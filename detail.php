@@ -1,4 +1,5 @@
 <?php
+
 require_once 'config.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -40,11 +41,14 @@ mysqli_stmt_execute($stmtTerkait);
 $resultTerkait = mysqli_stmt_get_result($stmtTerkait);
 $artikelTerkait = mysqli_fetch_all($resultTerkait, MYSQLI_ASSOC);
 mysqli_stmt_close($stmtTerkait);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -52,7 +56,9 @@ mysqli_stmt_close($stmtTerkait);
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body {
@@ -73,6 +79,7 @@ mysqli_stmt_close($stmtTerkait);
             background-size: 24px 24px;
         }
     </style>
+
 </head>
 
 <body class="bg-stone-50 text-stone-800 font-sans antialiased flex flex-col min-h-screen selection:bg-amber-200 selection:text-amber-900">
@@ -80,6 +87,94 @@ mysqli_stmt_close($stmtTerkait);
     <?php
     include 'assets/header.php';
     ?>
+
+    <div
+        id="readingProgress"
+        class="hidden lg:block fixed right-5 top-1/2 -translate-y-1/2 z-40 w-36 bg-white border border-stone-200 rounded-2xl shadow-lg shadow-stone-900/10 p-4 transition-all duration-300">
+
+        <div class="flex items-center gap-2 mb-3">
+
+            <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center shrink-0">
+
+                <i class="fa-solid fa-book-open text-xs"></i>
+
+            </div>
+
+            <p class="text-[10px] uppercase tracking-[0.16em] font-black text-stone-500">
+                Progres Baca
+            </p>
+
+        </div>
+
+        <div class="flex items-end gap-1 mb-2">
+
+            <span
+                id="progressPercent"
+                class="text-2xl font-black tracking-tight text-stone-900">
+                0%
+            </span>
+
+        </div>
+
+        <div class="w-full h-2 rounded-full bg-stone-100 overflow-hidden">
+
+            <div
+                id="progressBar"
+                class="h-full w-0 rounded-full bg-amber-400 transition-[width] duration-150">
+            </div>
+
+        </div>
+
+        <p
+            id="progressText"
+            class="text-[10px] leading-relaxed text-stone-400 font-medium mt-2">
+            Baru mulai, Lur.
+        </p>
+
+    </div>
+
+    <div
+        id="mobileReadingProgress"
+        class="lg:hidden fixed right-4 bottom-5 z-40 bg-white border border-stone-200 rounded-xl shadow-lg shadow-stone-900/10 px-3 py-2.5">
+
+        <div class="flex items-center gap-2.5">
+
+            <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-800 flex items-center justify-center shrink-0">
+
+                <i class="fa-solid fa-book-open text-xs"></i>
+
+            </div>
+
+            <div class="min-w-0">
+
+                <div class="flex items-center justify-between gap-3">
+
+                    <span class="text-[9px] uppercase tracking-[0.14em] font-black text-stone-400">
+                        Progres Baca
+                    </span>
+
+                    <span
+                        id="mobileProgressPercent"
+                        class="text-xs font-black text-stone-900">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="w-24 h-1.5 rounded-full bg-stone-100 overflow-hidden mt-1">
+
+                    <div
+                        id="mobileProgressBar"
+                        class="h-full w-0 rounded-full bg-amber-400 transition-[width] duration-150">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <main class="flex-grow">
 
@@ -89,8 +184,11 @@ mysqli_stmt_close($stmtTerkait);
 
                 <a href="index.php"
                     class="inline-flex items-center gap-2 text-sm font-semibold text-stone-500 hover:text-amber-900 transition">
+
                     <i class="fa-solid fa-arrow-left text-xs"></i>
+
                     Kembali ke Beranda
+
                 </a>
 
             </div>
@@ -184,11 +282,13 @@ mysqli_stmt_close($stmtTerkait);
 
                         <div class="flex items-center gap-3 mt-7 pb-7 border-b border-stone-100">
 
-                            <div class="w-11 h-11 rounded-2xl bg-amber-800 text-white flex items-center justify-center shadow-sm">
+                            <a
+                                href="author.php?nama=<?= urlencode($berita['penulis']); ?>"
+                                class="w-11 h-11 rounded-2xl bg-amber-800 text-white flex items-center justify-center shadow-sm hover:bg-amber-900 transition shrink-0">
 
                                 <i class="fa-solid fa-user-pen"></i>
 
-                            </div>
+                            </a>
 
                             <div>
 
@@ -196,15 +296,25 @@ mysqli_stmt_close($stmtTerkait);
                                     Ditulis oleh
                                 </p>
 
-                                <p class="text-sm font-bold text-stone-800 mt-0.5">
+                                <a
+                                    href="author.php?nama=<?= urlencode($berita['penulis']); ?>"
+                                    class="inline-block text-sm font-bold text-stone-800 mt-0.5 hover:text-amber-800 transition">
+
                                     <?= htmlspecialchars($berita['penulis']); ?>
+
+                                </a>
+
+                                <p class="text-[11px] text-stone-400 mt-0.5">
+                                    Lihat profil penulis
                                 </p>
 
                             </div>
 
                         </div>
 
-                        <div class="mt-8 text-[16px] sm:text-[17px] leading-8 text-stone-700">
+                        <div
+                            id="articleContent"
+                            class="mt-8 text-[16px] sm:text-[17px] leading-8 text-stone-700">
 
                             <?= nl2br(htmlspecialchars($berita['konten'])); ?>
 
@@ -223,30 +333,6 @@ mysqli_stmt_close($stmtTerkait);
                                     Lihat Kabar Lainnya
 
                                 </a>
-
-                                <div class="flex items-center gap-2">
-
-                                    <a
-                                        href="update.php?id=<?= $berita['id']; ?>"
-                                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200/70 text-amber-900 text-sm font-bold hover:bg-amber-100 transition">
-
-                                        <i class="fa-solid fa-pen-to-square"></i>
-
-                                        Sunting
-
-                                    </a>
-
-                                    <a
-                                        href="delete.php?id=<?= $berita['id']; ?>"
-                                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 border border-rose-200/70 text-rose-700 text-sm font-bold hover:bg-rose-100 transition">
-
-                                        <i class="fa-solid fa-trash-can"></i>
-
-                                        Hapus
-
-                                    </a>
-
-                                </div>
 
                             </div>
 
@@ -277,8 +363,11 @@ mysqli_stmt_close($stmtTerkait);
                         </div>
 
                         <div class="hidden sm:flex items-center gap-2 text-xs text-stone-400">
+
                             <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+
                             Kategori <?= htmlspecialchars($berita['kategori']); ?>
+
                         </div>
 
                     </div>
@@ -327,12 +416,17 @@ mysqli_stmt_close($stmtTerkait);
                                     <div class="flex items-center justify-between gap-3 mb-3">
 
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-100 text-amber-900 text-[10px] font-bold uppercase tracking-wider">
+
                                             <?= htmlspecialchars($terkait['kategori']); ?>
+
                                         </span>
 
                                         <span class="inline-flex items-center gap-1 text-[11px] text-stone-400 shrink-0">
+
                                             <i class="fa-regular fa-clock"></i>
+
                                             <?= (int)$terkait['read_time']; ?> menit
+
                                         </span>
 
                                     </div>
@@ -353,9 +447,14 @@ mysqli_stmt_close($stmtTerkait);
                                             •
                                         </span>
 
-                                        <span>
+                                        <a
+                                            href="author.php?nama=<?= urlencode($terkait['penulis']); ?>"
+                                            onclick="event.stopPropagation();"
+                                            class="hover:text-amber-800 transition">
+
                                             <?= htmlspecialchars($terkait['penulis']); ?>
-                                        </span>
+
+                                        </a>
 
                                     </div>
 
@@ -418,6 +517,65 @@ mysqli_stmt_close($stmtTerkait);
     <?php
     include 'assets/footer.php';
     ?>
+
+    <script>
+        const articleContent = document.getElementById('articleContent');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        const mobileProgressPercent = document.getElementById('mobileProgressPercent');
+        const mobileProgressBar = document.getElementById('mobileProgressBar');
+
+        function updateReadingProgress() {
+            const articleTop = articleContent.getBoundingClientRect().top + window.scrollY;
+            const articleHeight = articleContent.offsetHeight;
+            const viewportHeight = window.innerHeight;
+
+            const startPoint = articleTop;
+            const endPoint = articleTop + articleHeight - viewportHeight;
+
+            if (endPoint <= startPoint) {
+                setReadingProgress(100);
+                return;
+            }
+
+            const currentPosition = window.scrollY;
+            const progress = ((currentPosition - startPoint) / (endPoint - startPoint)) * 100;
+
+            setReadingProgress(Math.min(100, Math.max(0, progress)));
+        }
+
+        function setReadingProgress(progress) {
+            const roundedProgress = Math.round(progress);
+
+            progressPercent.textContent = `${roundedProgress}%`;
+            progressBar.style.width = `${roundedProgress}%`;
+
+            mobileProgressPercent.textContent = `${roundedProgress}%`;
+            mobileProgressBar.style.width = `${roundedProgress}%`;
+
+            if (roundedProgress >= 100) {
+                progressText.textContent = 'Rampung. Matur nuwun sudah ngabar.';
+            } else if (roundedProgress >= 75) {
+                progressText.textContent = 'Dikit lagi, Lur.';
+            } else if (roundedProgress >= 50) {
+                progressText.textContent = 'Separuh lebih, lanjut.';
+            } else if (roundedProgress >= 25) {
+                progressText.textContent = 'Sudah lumayan jauh.';
+            } else {
+                progressText.textContent = 'Baru mulai, Lur.';
+            }
+        }
+
+        window.addEventListener('scroll', updateReadingProgress, {
+            passive: true
+        });
+
+        window.addEventListener('resize', updateReadingProgress);
+
+        updateReadingProgress();
+    </script>
 
 </body>
 
