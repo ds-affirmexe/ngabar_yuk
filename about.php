@@ -73,28 +73,10 @@ require_once 'config.php';
 
     <main class="max-w-5xl w-full mx-auto px-5 py-8 md:py-10 flex-grow">
 
-        <div class="flex items-center gap-2 mb-6">
-
-            <a href="index.php"
-                class="text-xs font-semibold text-stone-500 hover:text-amber-800 transition">
-
-                Beranda
-
-            </a>
-
-            <i class="fa-solid fa-chevron-right text-[8px] text-stone-300"></i>
-
-            <span class="text-xs font-semibold text-amber-800">
-
-                Tentang
-
-            </span>
-
-        </div>
-
         <section class="relative overflow-hidden bg-[#542f1b] text-white rounded-3xl shadow-lg shadow-stone-900/10 javanese-pattern mb-7">
 
             <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full border border-amber-300/10"></div>
+
             <div class="absolute -right-6 -bottom-24 w-60 h-60 rounded-full border border-amber-300/10"></div>
 
             <div class="relative px-6 py-9 md:px-9 md:py-11">
@@ -120,10 +102,30 @@ require_once 'config.php';
                     <p class="text-sm md:text-[15px] text-stone-300 mt-4 leading-relaxed max-w-2xl">
 
                         Ngabar Yuk! adalah wadah sederhana untuk berbagi kabar,
-                        gagasan, dan cerita. Karena kadang, sebuah kabar memang
-                        lebih enak dibicarakan sambil ngopi.
+                        gagasan, dan cerita. Tempat warta bertemu reriungan,
+                        dengan nuansa lokal yang dikemas melalui antarmuka modern
+                        dan mudah digunakan.
 
                     </p>
+
+                    <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 text-[10px] uppercase tracking-[0.14em] font-semibold text-stone-400">
+
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-newspaper text-amber-400"></i>
+                            Warta
+                        </span>
+
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-comments text-amber-400"></i>
+                            Reriungan
+                        </span>
+
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb text-amber-400"></i>
+                            Insight
+                        </span>
+
+                    </div>
 
                 </div>
 
@@ -137,7 +139,7 @@ require_once 'config.php';
 
                 <div class="flex items-center gap-3 mb-5">
 
-                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
 
                         <i class="fa-solid fa-mug-hot"></i>
 
@@ -146,15 +148,11 @@ require_once 'config.php';
                     <div>
 
                         <p class="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-800">
-
                             Filosofi Nama
-
                         </p>
 
                         <h2 class="text-xl font-black text-[#542f1b]">
-
-                            Kenapa "Ngabar Yuk!"?
-
+                            Kenapa “Ngabar Yuk!”?
                         </h2>
 
                     </div>
@@ -165,28 +163,18 @@ require_once 'config.php';
 
                     <p>
 
-                        <strong class="text-[#542f1b]">Ngabar</strong> mengambil
-                        nuansa dari aktivitas berbagi kabar dan berbincang.
-                        Kata <em>"Yuk!"</em> menambahkan ajakan yang santai,
-                        terbuka, dan tidak berjarak.
+                        <strong class="text-[#542f1b]">“Ngabar”</strong> diambil dari
+                        kata <em>kabar</em>, sesuatu yang dibagikan dan dibicarakan
+                        bersama. Sementara <strong class="text-[#542f1b]">“Yuk!”</strong>
+                        memberi kesan ajakan yang ringan dan dekat.
 
                     </p>
 
                     <p>
 
-                        Konsep tersebut menjadi dasar dari website ini:
-                        menghadirkan tempat yang sederhana untuk menyampaikan
-                        sesuatu, membaca kabar orang lain, dan membuka ruang
-                        untuk reriungan.
-
-                    </p>
-
-                    <p>
-
-                        Nuansa Jawa digunakan sebagai identitas visual untuk
-                        memberikan karakter yang dekat dengan budaya lokal,
-                        tetapi tetap dikemas dengan antarmuka yang modern
-                        dan mudah digunakan.
+                        Nama ini menjadi gambaran sederhana dari tujuan website:
+                        bukan hanya menyampaikan informasi, tetapi juga mengajak
+                        orang untuk membaca, berpikir, dan mereriung bersama.
 
                     </p>
 
@@ -194,94 +182,67 @@ require_once 'config.php';
 
             </div>
 
-            <div class="md:col-span-2 bg-amber-50 border border-amber-100 rounded-2xl p-6 md:p-7 flex flex-col justify-between">
+            <div class="md:col-span-2 bg-amber-50 border border-amber-100 rounded-2xl p-6 md:p-7">
 
-                <div>
+                <div class="flex items-center gap-3 mb-5">
 
-                    <p class="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-800 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
 
-                        Nilai Utama
+                        <i class="fa-solid fa-palette"></i>
 
-                    </p>
+                    </div>
 
-                    <div class="space-y-4">
+                    <div>
 
-                        <div class="flex gap-3">
+                        <p class="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-800">
+                            Identitas
+                        </p>
 
-                            <div class="w-9 h-9 shrink-0 rounded-lg bg-white text-amber-800 flex items-center justify-center shadow-sm">
+                        <h2 class="text-xl font-black text-[#542f1b]">
+                            Nuansa yang dipilih
+                        </h2>
 
-                                <i class="fa-solid fa-newspaper text-sm"></i>
+                    </div>
 
-                            </div>
+                </div>
 
-                            <div>
+                <div class="space-y-3">
 
-                                <h3 class="text-sm font-black text-[#542f1b]">
+                    <div class="flex items-center gap-3">
 
-                                    Warta
+                        <span class="w-8 h-8 rounded-lg bg-[#542f1b] text-white flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-brush text-xs"></i>
+                        </span>
 
-                                </h3>
-
-                                <p class="text-xs text-stone-500 mt-1 leading-relaxed">
-
-                                    Berbagi informasi dan kabar yang menarik untuk diketahui.
-
-                                </p>
-
-                            </div>
-
+                        <div>
+                            <p class="text-sm font-bold text-[#542f1b]">Jawa</p>
+                            <p class="text-xs text-stone-500">Inspirasi visual dan suasana lokal.</p>
                         </div>
 
-                        <div class="flex gap-3">
+                    </div>
 
-                            <div class="w-9 h-9 shrink-0 rounded-lg bg-white text-amber-800 flex items-center justify-center shadow-sm">
+                    <div class="flex items-center gap-3">
 
-                                <i class="fa-solid fa-comments text-sm"></i>
+                        <span class="w-8 h-8 rounded-lg bg-white text-amber-700 flex items-center justify-center shrink-0 border border-amber-100">
+                            <i class="fa-solid fa-mug-hot text-xs"></i>
+                        </span>
 
-                            </div>
-
-                            <div>
-
-                                <h3 class="text-sm font-black text-[#542f1b]">
-
-                                    Reriungan
-
-                                </h3>
-
-                                <p class="text-xs text-stone-500 mt-1 leading-relaxed">
-
-                                    Membuka ruang untuk berbagi cerita dan gagasan.
-
-                                </p>
-
-                            </div>
-
+                        <div>
+                            <p class="text-sm font-bold text-[#542f1b]">Hangat</p>
+                            <p class="text-xs text-stone-500">Kesan dekat, santai, dan mudah didekati.</p>
                         </div>
 
-                        <div class="flex gap-3">
+                    </div>
 
-                            <div class="w-9 h-9 shrink-0 rounded-lg bg-white text-amber-800 flex items-center justify-center shadow-sm">
+                    <div class="flex items-center gap-3">
 
-                                <i class="fa-solid fa-lightbulb text-sm"></i>
+                        <span class="w-8 h-8 rounded-lg bg-white text-amber-700 flex items-center justify-center shrink-0 border border-amber-100">
+                            <i class="fa-solid fa-comments text-xs"></i>
+                        </span>
 
-                            </div>
-
-                            <div>
-
-                                <h3 class="text-sm font-black text-[#542f1b]">
-
-                                    Insight
-
-                                </h3>
-
-                                <p class="text-xs text-stone-500 mt-1 leading-relaxed">
-
-                                    Menyajikan sudut pandang yang dapat menjadi bahan pemikiran.
-
-                                </p>
-
-                            </div>
-
+                        <div>
+                            <p class="text-sm font-bold text-[#542f1b]">Reriungan</p>
+                            <p class="text-xs text-stone-500">Membuka ruang untuk cerita dan gagasan.</p>
                         </div>
 
                     </div>
@@ -294,7 +255,81 @@ require_once 'config.php';
 
         <section class="mb-7">
 
-            <div class="flex items-end justify-between gap-4 mb-5">
+            <div class="flex items-center gap-2 mb-5">
+
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+
+                <div>
+
+                    <p class="text-[10px] uppercase tracking-[0.16em] font-bold text-amber-800">
+                        Prinsip
+                    </p>
+
+                    <h2 class="text-2xl font-black text-[#542f1b] tracking-tight">
+                        Tiga nilai utama
+                    </h2>
+
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
+
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-newspaper"></i>
+                    </div>
+
+                    <h3 class="text-base font-black text-[#542f1b]">
+                        Warta
+                    </h3>
+
+                    <p class="text-xs text-stone-500 mt-2 leading-relaxed">
+                        Menyampaikan kabar dan informasi dalam bentuk yang ringan dan mudah dibaca.
+                    </p>
+
+                </div>
+
+                <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
+
+                    <div class="w-11 h-11 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+
+                    <h3 class="text-base font-black text-[#542f1b]">
+                        Reriungan
+                    </h3>
+
+                    <p class="text-xs text-stone-500 mt-2 leading-relaxed">
+                        Menghadirkan suasana yang dekat agar cerita dan gagasan terasa lebih personal.
+                    </p>
+
+                </div>
+
+                <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
+
+                    <div class="w-11 h-11 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+
+                    <h3 class="text-base font-black text-[#542f1b]">
+                        Insight
+                    </h3>
+
+                    <p class="text-xs text-stone-500 mt-2 leading-relaxed">
+                        Memberi ruang untuk sudut pandang, pemikiran, dan hal-hal yang layak direnungkan.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="mb-7">
+
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
 
                 <div>
 
@@ -303,43 +338,143 @@ require_once 'config.php';
                         <span class="w-2 h-2 rounded-full bg-amber-500"></span>
 
                         <p class="text-[10px] uppercase tracking-[0.16em] font-bold text-amber-800">
-
-                            Di Balik Website
-
+                            Pengalaman Pengunjung
                         </p>
 
                     </div>
 
                     <h2 class="text-2xl font-black text-[#542f1b] tracking-tight">
-
-                        Dibuat dengan sederhana
-
+                        Cara Ngabar Yuk!
                     </h2>
+
+                </div>
+
+                <p class="text-xs text-stone-400 max-w-sm sm:text-right leading-relaxed">
+                    Tiga langkah sederhana untuk menemukan kabar, membaca cerita, dan ikut dalam reriungan.
+                </p>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                <div class="bg-white border border-stone-200 rounded-2xl p-5 shadow-sm">
+
+                    <div class="flex items-center justify-between mb-5">
+
+                        <span class="text-3xl font-black text-amber-200">
+                            01
+                        </span>
+
+                        <span class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+                            <i class="fa-solid fa-compass"></i>
+                        </span>
+
+                    </div>
+
+                    <h3 class="text-base font-black text-[#542f1b]">
+                        Temukan
+                    </h3>
+
+                    <p class="text-xs text-stone-500 leading-relaxed mt-2">
+                        Jelajahi berbagai kabar dan temukan topik yang menarik perhatianmu.
+                    </p>
+
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-2xl p-5 shadow-sm">
+
+                    <div class="flex items-center justify-between mb-5">
+
+                        <span class="text-3xl font-black text-amber-200">
+                            02
+                        </span>
+
+                        <span class="w-10 h-10 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
+                            <i class="fa-solid fa-book-open"></i>
+                        </span>
+
+                    </div>
+
+                    <h3 class="text-base font-black text-[#542f1b]">
+                        Baca
+                    </h3>
+
+                    <p class="text-xs text-stone-500 leading-relaxed mt-2">
+                        Simak cerita, warta, opini, dan insight dari berbagai penulis.
+                    </p>
+
+                </div>
+
+                <div class="bg-white border border-stone-200 rounded-2xl p-5 shadow-sm">
+
+                    <div class="flex items-center justify-between mb-5">
+
+                        <span class="text-3xl font-black text-amber-200">
+                            03
+                        </span>
+
+                        <span class="w-10 h-10 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center">
+                            <i class="fa-solid fa-comments"></i>
+                        </span>
+
+                    </div>
+
+                    <h3 class="text-base font-black text-[#542f1b]">
+                        Reriung
+                    </h3>
+
+                    <p class="text-xs text-stone-500 leading-relaxed mt-2">
+                        Temukan sudut pandang baru dan biarkan setiap kabar membuka ruang untuk berpikir.
+                    </p>
 
                 </div>
 
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        </section>
+
+        <section class="mb-7">
+
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+
+                <div>
+
+                    <div class="flex items-center gap-2 mb-1">
+
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+
+                        <p class="text-[10px] uppercase tracking-[0.16em] font-bold text-amber-800">
+                            Di Balik Website
+                        </p>
+
+                    </div>
+
+                    <h2 class="text-2xl font-black text-[#542f1b] tracking-tight">
+                        Teknologi yang digunakan
+                    </h2>
+
+                </div>
+
+                <p class="text-xs text-stone-400 max-w-sm sm:text-right leading-relaxed">
+                    Teknologi yang digunakan untuk membangun tampilan, interaksi, dan pengelolaan data Ngabar Yuk!
+                </p>
+
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
 
                 <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
 
                     <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-700 flex items-center justify-center mb-4">
-
                         <i class="fa-brands fa-html5 text-lg"></i>
-
                     </div>
 
                     <h3 class="text-sm font-black text-[#542f1b]">
-
                         HTML
-
                     </h3>
 
                     <p class="text-xs text-stone-500 mt-1.5 leading-relaxed">
-
                         Struktur dasar halaman dan konten website.
-
                     </p>
 
                 </div>
@@ -347,21 +482,15 @@ require_once 'config.php';
                 <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
 
                     <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center mb-4">
-
                         <i class="fa-brands fa-css3-alt text-lg"></i>
-
                     </div>
 
                     <h3 class="text-sm font-black text-[#542f1b]">
-
                         Tailwind CSS
-
                     </h3>
 
                     <p class="text-xs text-stone-500 mt-1.5 leading-relaxed">
-
-                        Styling antarmuka dengan sistem utility-first.
-
+                        Styling antarmuka dengan pendekatan utility-first.
                     </p>
 
                 </div>
@@ -369,21 +498,15 @@ require_once 'config.php';
                 <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
 
                     <div class="w-10 h-10 rounded-xl bg-yellow-50 text-yellow-700 flex items-center justify-center mb-4">
-
                         <i class="fa-brands fa-js text-lg"></i>
-
                     </div>
 
                     <h3 class="text-sm font-black text-[#542f1b]">
-
                         JavaScript
-
                     </h3>
 
                     <p class="text-xs text-stone-500 mt-1.5 leading-relaxed">
-
-                        Interaksi kecil untuk pengalaman pengguna.
-
+                        Menangani interaksi dan pengalaman pengguna.
                     </p>
 
                 </div>
@@ -391,21 +514,31 @@ require_once 'config.php';
                 <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
 
                     <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center mb-4">
-
                         <i class="fa-brands fa-php text-lg"></i>
-
                     </div>
 
                     <h3 class="text-sm font-black text-[#542f1b]">
-
                         PHP
-
                     </h3>
 
                     <p class="text-xs text-stone-500 mt-1.5 leading-relaxed">
-
                         Menangani proses CRUD dan koneksi dengan database.
+                    </p>
 
+                </div>
+
+                <div class="feature-card bg-white border border-stone-200 rounded-2xl shadow-sm p-5">
+
+                    <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-700 flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-icons text-lg"></i>
+                    </div>
+
+                    <h3 class="text-sm font-black text-[#542f1b]">
+                        Font Awesome
+                    </h3>
+
+                    <p class="text-xs text-stone-500 mt-1.5 leading-relaxed">
+                        Menambahkan ikon untuk memperjelas navigasi dan informasi.
                     </p>
 
                 </div>
@@ -421,23 +554,17 @@ require_once 'config.php';
                 <div class="flex items-center gap-3 mb-5">
 
                     <div class="w-10 h-10 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
-
-                        <i class="fa-solid fa-list-check"></i>
-
+                        <i class="fa-solid fa-compass"></i>
                     </div>
 
                     <div>
 
                         <p class="text-[10px] uppercase tracking-[0.15em] font-bold text-stone-500">
-
-                            Fitur
-
+                            Eksplorasi
                         </p>
 
                         <h2 class="text-xl font-black text-[#542f1b]">
-
-                            Apa yang bisa dilakukan?
-
+                            Yang bisa kamu lakukan
                         </h2>
 
                     </div>
@@ -448,22 +575,18 @@ require_once 'config.php';
 
                     <div class="flex items-center gap-3 text-sm text-stone-600">
 
-                        <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-plus text-xs"></i>
-
+                        <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-newspaper text-xs"></i>
                         </span>
 
-                        Membuat kabar baru
+                        Membaca berbagai kabar dan cerita
 
                     </div>
 
                     <div class="flex items-center gap-3 text-sm text-stone-600">
 
                         <span class="w-7 h-7 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center shrink-0">
-
                             <i class="fa-solid fa-magnifying-glass text-xs"></i>
-
                         </span>
 
                         Mencari kabar berdasarkan kata kunci
@@ -473,9 +596,7 @@ require_once 'config.php';
                     <div class="flex items-center gap-3 text-sm text-stone-600">
 
                         <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-
                             <i class="fa-solid fa-filter text-xs"></i>
-
                         </span>
 
                         Menyaring kabar berdasarkan kategori
@@ -485,24 +606,20 @@ require_once 'config.php';
                     <div class="flex items-center gap-3 text-sm text-stone-600">
 
                         <span class="w-7 h-7 rounded-lg bg-violet-50 text-violet-700 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-pen-to-square text-xs"></i>
-
+                            <i class="fa-solid fa-user-pen text-xs"></i>
                         </span>
 
-                        Menyunting kabar yang sudah dibuat
+                        Mengenal penulis dan tulisan mereka
 
                     </div>
 
                     <div class="flex items-center gap-3 text-sm text-stone-600">
 
-                        <span class="w-7 h-7 rounded-lg bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
-
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-
+                        <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-shapes text-xs"></i>
                         </span>
 
-                        Menghapus kabar
+                        Menjelajahi berbagai topik dan kategori
 
                     </div>
 
@@ -513,55 +630,40 @@ require_once 'config.php';
             <div class="bg-[#542f1b] text-white rounded-2xl shadow-sm p-6 javanese-pattern">
 
                 <div class="w-11 h-11 rounded-xl bg-amber-400 text-[#542f1b] flex items-center justify-center mb-5">
-
                     <i class="fa-solid fa-code"></i>
-
                 </div>
 
                 <p class="text-[10px] uppercase tracking-[0.15em] font-bold text-amber-300">
-
                     Dibuat oleh
-
                 </p>
 
                 <h2 class="text-2xl font-black mt-1">
-
                     Aqeela Fazle Mawla Ramadhan
-
                 </h2>
 
                 <p class="text-sm text-stone-300 mt-3 leading-relaxed">
 
                     Website ini dibuat sebagai bagian dari
-
                     <strong class="text-white">
-
                         Tugas Seleksi Divisi Webmaster
-
                     </strong>
-
-                    dengan pendekatan sederhana, fungsional, dan tetap memperhatikan pengalaman pengguna.
+                    dengan pendekatan sederhana, fungsional,
+                    dan tetap memperhatikan pengalaman pengguna.
 
                 </p>
 
                 <div class="flex flex-wrap gap-2 mt-5">
 
                     <span class="px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 text-[10px] font-semibold text-stone-200">
-
                         CRUD
-
                     </span>
 
                     <span class="px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 text-[10px] font-semibold text-stone-200">
-
                         Web Development
-
                     </span>
 
                     <span class="px-2.5 py-1.5 rounded-lg bg-white/10 border border-white/10 text-[10px] font-semibold text-stone-200">
-
                         UI/UX
-
                     </span>
 
                 </div>
@@ -575,43 +677,36 @@ require_once 'config.php';
             <div class="flex items-start gap-4">
 
                 <div class="w-11 h-11 shrink-0 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
-
                     <i class="fa-solid fa-mug-hot"></i>
-
                 </div>
 
                 <div>
 
                     <p class="text-xs uppercase tracking-[0.14em] font-bold text-amber-800">
-
-                        Sudah siap ngabar?
-
+                        Mau ikut reriungan?
                     </p>
 
                     <h2 class="text-xl font-black text-[#542f1b] mt-1">
-
-                        Punya cerita untuk dibagikan?
-
+                        Masih banyak kabar untuk dijelajahi.
                     </h2>
 
                     <p class="text-xs text-stone-500 mt-1 leading-relaxed">
-
-                        Tulis kabarmu dan biarkan menjadi bagian dari reriungan di sini.
-
+                        Lihat kumpulan artikel dan temukan cerita yang mungkin belum kamu baca.
                     </p>
 
                 </div>
 
             </div>
 
-            <!-- <a href="create.php"
+            <a
+                href="article.php"
                 class="inline-flex items-center justify-center gap-2 bg-[#542f1b] hover:bg-[#452515] text-white font-bold text-sm px-5 py-3 rounded-xl transition shadow-sm shrink-0">
 
-                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                Jelajahi Kabar
 
-                Tulis Kabar
+                <i class="fa-solid fa-arrow-right text-xs"></i>
 
-            </a> -->
+            </a>
 
         </section>
 

@@ -1446,46 +1446,61 @@ $editorContent = isset($_POST['konten'])
         const wordCounter = document.getElementById('word-counter');
         const readTimePreview = document.getElementById('read-time-preview');
         const formatBlock = document.getElementById('format-block');
-        const toolbarButtons = document.querySelectorAll('.toolbar-button');
+        const toolbar = document.getElementById('editor-toolbar');
+        const toolbarButtons = toolbar ? toolbar.querySelectorAll('.toolbar-button') : [];
 
         let savedRange = null;
+        let toolbarUpdateFrame = null;
+
+        function isEditorSelection(selection) {
+            if (!selection || selection.rangeCount === 0 || !editorContent) {
+                return false;
+            }
+
+            const range = selection.getRangeAt(0);
+            return editorContent.contains(range.commonAncestorContainer);
+        }
 
         function saveSelection() {
             const selection = window.getSelection();
 
-            if (!selection || selection.rangeCount === 0) {
+            if (!isEditorSelection(selection)) {
                 return;
             }
 
-            const range = selection.getRangeAt(0);
-
-            if (editorContent.contains(range.commonAncestorContainer)) {
-                savedRange = range.cloneRange();
-            }
+            savedRange = selection.getRangeAt(0).cloneRange();
         }
 
         function restoreSelection() {
+            if (!editorContent) {
+                return false;
+            }
+
+            editorContent.focus({
+                preventScroll: true
+            });
+
             if (!savedRange) {
-                editorContent.focus();
-                return;
+                return false;
             }
 
             const selection = window.getSelection();
-
             selection.removeAllRanges();
             selection.addRange(savedRange);
 
-            editorContent.focus();
+            return true;
         }
 
         function updateEditorValue() {
-            inputKonten.value = editorContent.innerHTML;
+            if (editorContent && inputKonten) {
+                inputKonten.value = editorContent.innerHTML;
+            }
         }
 
         function getCurrentBlock() {
             const selection = window.getSelection();
 
-            if (!selection || selection.rangeCount === 0) {
+            if (!isEditorSelection(selection)) {
                 return null;
             }
 
@@ -1503,42 +1518,67 @@ $editorContent = isset($_POST['konten'])
                 return null;
             }
 
-            const block = node.closest('p, h2, h3, h4, blockquote, li');
+            return node.closest('p, h2, h3, h4, blockquote, li');
+        }
 
-            return block || node;
+        function scheduleToolbarUpdate() {
+            if (toolbarUpdateFrame) {
+                cancelAnimationFrame(toolbarUpdateFrame);
+            }
+
+            toolbarUpdateFrame = requestAnimationFrame(function() {
+                toolbarUpdateFrame = null;
+                updateToolbarState();
+            });
         }
 
         function updateToolbarState() {
-            toolbarButtons.forEach(button => {
+            if (!editorContent || document.activeElement !== editorContent) {
+                return;
+            }
+
+            toolbarButtons.forEach(function(button) {
                 const command = button.dataset.command;
 
-                if (
-                    command === 'bold' ||
-                    command === 'italic' ||
-                    command === 'underline' ||
-                    command === 'insertUnorderedList' ||
-                    command === 'insertOrderedList' ||
-                    command === 'justifyLeft' ||
-                    command === 'justifyCenter' ||
-                    command === 'justifyRight' ||
-                    command === 'justifyFull'
-                ) {
-                    try {
-                        button.classList.toggle(
-                            'active',
-                            document.queryCommandState(command)
-                        );
-                    } catch (error) {
-                        button.classList.remove('active');
-                    }
+                const stateCommands = [
+                    'bold',
+                    'italic',
+                    'underline',
+                    'insertUnorderedList',
+                    'insertOrderedList',
+                    'justifyLeft',
+                    'justifyCenter',
+                    'justifyRight',
+                    'justifyFull'
+                ];
+
+                if (!stateCommands.includes(command)) {
+                    return;
+                }
+
+                try {
+                    button.classList.toggle(
+                        'active',
+                        document.queryCommandState(command)
+                    );
+                } catch (error) {
+                    button.classList.remove('active');
                 }
             });
 
             const block = getCurrentBlock();
+            const quoteButton = toolbar.querySelector(
+                '[data-command="formatBlock"][data-value="blockquote"]'
+            );
 
             if (!block) {
                 formatBlock.value = 'p';
                 formatBlock.classList.remove('active');
+
+                if (quoteButton) {
+                    quoteButton.classList.remove('active');
+                }
+
                 return;
             }
 
@@ -1549,17 +1589,11 @@ $editorContent = isset($_POST['konten'])
                 formatBlock.classList.add('active');
             } else {
                 formatBlock.value = 'p';
-
-                if (tag === 'blockquote') {
-                    formatBlock.classList.add('active');
-                } else {
-                    formatBlock.classList.remove('active');
-                }
+                formatBlock.classList.toggle(
+                    'active',
+                    tag === 'blockquote'
+                );
             }
-
-            const quoteButton = document.querySelector(
-                '[data-command="formatBlock"][data-value="blockquote"]'
-            );
 
             if (quoteButton) {
                 quoteButton.classList.toggle(
@@ -1569,28 +1603,41 @@ $editorContent = isset($_POST['konten'])
             }
         }
 
-        function executeCommand(command, value = null) {
-            restoreSelection();
-
-            if (command === 'formatBlock') {
-                document.execCommand('formatBlock', false, value);
-            } else {
-                document.execCommand(command, false, value);
+        function executeCommand(command, value) {
+            if (!editorContent) {
+                return;
             }
 
+            restoreSelection();
+            editorContent.focus({
+                preventScroll: true
+            });
+
+            try {
+                document.execCommand(
+                    command,
+                    false,
+                    value || null
+                );
+            } catch (error) {
+                return;
+            }
+
+            saveSelection();
             updateEditorValue();
             updateReadTime();
-            updateToolbarState();
-            saveSelection();
+            scheduleToolbarUpdate();
         }
 
-        toolbarButtons.forEach(button => {
+        toolbarButtons.forEach(function(button) {
             button.addEventListener('mousedown', function(event) {
                 event.preventDefault();
                 saveSelection();
             });
 
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
                 const command = this.dataset.command;
                 const value = this.dataset.value || null;
 
@@ -1599,13 +1646,26 @@ $editorContent = isset($_POST['konten'])
 
                     const url = prompt('Masukkan URL tautan:');
 
-                    if (url) {
-                        document.execCommand('createLink', false, url);
+                    if (!url) {
+                        editorContent.focus({
+                            preventScroll: true
+                        });
+                        return;
                     }
 
-                    updateEditorValue();
-                    updateToolbarState();
+                    try {
+                        document.execCommand(
+                            'createLink',
+                            false,
+                            url.trim()
+                        );
+                    } catch (error) {
+                        return;
+                    }
+
                     saveSelection();
+                    updateEditorValue();
+                    scheduleToolbarUpdate();
 
                     return;
                 }
@@ -1614,71 +1674,78 @@ $editorContent = isset($_POST['konten'])
             });
         });
 
-        formatBlock.addEventListener('mousedown', function() {
-            saveSelection();
-        });
+        if (formatBlock) {
+            formatBlock.addEventListener('mousedown', function() {
+                saveSelection();
+            });
 
-        formatBlock.addEventListener('change', function() {
-            restoreSelection();
+            formatBlock.addEventListener('change', function() {
+                const value = this.value;
 
-            document.execCommand(
-                'formatBlock',
-                false,
-                this.value
-            );
+                restoreSelection();
+                editorContent.focus({
+                    preventScroll: true
+                });
 
-            updateEditorValue();
-            updateReadTime();
-            updateToolbarState();
-            saveSelection();
-        });
+                try {
+                    document.execCommand(
+                        'formatBlock',
+                        false,
+                        value
+                    );
+                } catch (error) {
+                    return;
+                }
+
+                saveSelection();
+                updateEditorValue();
+                updateReadTime();
+                scheduleToolbarUpdate();
+            });
+        }
 
         editorContent.addEventListener('mouseup', function() {
             saveSelection();
-            updateToolbarState();
+            scheduleToolbarUpdate();
         });
 
         editorContent.addEventListener('keyup', function() {
             saveSelection();
             updateEditorValue();
             updateReadTime();
-            updateToolbarState();
+            scheduleToolbarUpdate();
         });
 
         editorContent.addEventListener('input', function() {
             saveSelection();
             updateEditorValue();
             updateReadTime();
-            updateToolbarState();
+            scheduleToolbarUpdate();
         });
 
         editorContent.addEventListener('focus', function() {
-            updateToolbarState();
+            saveSelection();
+            scheduleToolbarUpdate();
         });
 
-        document.addEventListener('selectionchange', function() {
-            if (document.activeElement === editorContent) {
-                updateToolbarState();
-            }
+        editorContent.addEventListener('blur', function() {
+            saveSelection();
         });
 
         editorContent.addEventListener('keydown', function(event) {
             if (event.ctrlKey || event.metaKey) {
                 const key = event.key.toLowerCase();
 
-                if (key === 'b') {
+                if (key === 'b' || key === 'i' || key === 'u') {
                     event.preventDefault();
-                    executeCommand('bold');
-                }
 
-                if (key === 'i') {
-                    event.preventDefault();
-                    executeCommand('italic');
-                }
-
-                if (key === 'u') {
-                    event.preventDefault();
-                    executeCommand('underline');
+                    executeCommand(
+                        key === 'b' ?
+                        'bold' :
+                        key === 'i' ?
+                        'italic' :
+                        'underline'
+                    );
                 }
             }
         });
@@ -1688,15 +1755,18 @@ $editorContent = isset($_POST['konten'])
 
             const text = event.clipboardData.getData('text/plain');
 
+            restoreSelection();
+
             document.execCommand(
                 'insertText',
                 false,
                 text
             );
 
+            saveSelection();
             updateEditorValue();
             updateReadTime();
-            updateToolbarState();
+            scheduleToolbarUpdate();
         });
 
         function updateReadTime() {
@@ -1708,16 +1778,21 @@ $editorContent = isset($_POST['konten'])
 
             if (!text) {
                 wordCounter.textContent = '0 kata';
+
                 readTimePreview.innerHTML =
                     '<i class="fa-regular fa-clock"></i> 1 menit baca';
+
                 return;
             }
 
             const words = text
                 .split(/\s+/)
-                .filter(word => word.length > 0);
+                .filter(function(word) {
+                    return word.length > 0;
+                });
 
             const wordCount = words.length;
+
             const readTime = Math.max(
                 1,
                 Math.ceil(wordCount / 200)
@@ -1737,13 +1812,16 @@ $editorContent = isset($_POST['konten'])
                 updateEditorValue();
 
                 const judul = inputJudul.value.trim();
+
                 const kategori = formBerita
                     .querySelector('[name="kategori"]')
-                    .value.trim();
+                    .value
+                    .trim();
 
                 const penulis = formBerita
                     .querySelector('[name="penulis"]')
-                    .value.trim();
+                    .value
+                    .trim();
 
                 const konten = editorContent.innerText.trim();
 
@@ -1753,13 +1831,15 @@ $editorContent = isset($_POST['konten'])
                     return;
                 }
 
-                inputKonten.value = editorContent.innerHTML;
+                inputKonten.value =
+                    editorContent.innerHTML;
             });
         }
 
         updateEditorValue();
         updateReadTime();
-        updateToolbarState();
+        saveSelection();
+        scheduleToolbarUpdate();
     </script>
 
 </body>
