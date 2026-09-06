@@ -273,44 +273,6 @@ $result = mysqli_stmt_get_result($stmt);
 
                     </div>
 
-                    <div class="w-full md:w-48">
-
-                        <select
-                            name="read_time"
-                            class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-600/20 focus:border-amber-600 transition">
-
-                            <option value="">
-                                Semua Durasi
-                            </option>
-
-                            <option value="1-3" <?= ($read_time === '1-3') ? 'selected' : ''; ?>>
-                                1–3 menit
-                            </option>
-
-                            <option value="4-6" <?= ($read_time === '4-6') ? 'selected' : ''; ?>>
-                                4–6 menit
-                            </option>
-
-                            <option value="7-9" <?= ($read_time === '7-9') ? 'selected' : ''; ?>>
-                                7–9 menit
-                            </option>
-
-                            <option value="10-12" <?= ($read_time === '10-12') ? 'selected' : ''; ?>>
-                                10–12 menit
-                            </option>
-
-                            <option value="13-15" <?= ($read_time === '13-15') ? 'selected' : ''; ?>>
-                                13–15 menit
-                            </option>
-
-                            <option value="15-plus" <?= ($read_time === '15-plus') ? 'selected' : ''; ?>>
-                                Lebih dari 15 menit
-                            </option>
-
-                        </select>
-
-                    </div>
-
                     <div class="flex gap-2">
 
                         <button
